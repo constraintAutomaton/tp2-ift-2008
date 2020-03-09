@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/CMakeFiles/gtest-target"
+		},
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/CMakeFiles/gtest-target.rule"
+		},
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/CMakeFiles/gtest-target-complete.rule"
+		},
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/gtest-target-prefix/src/gtest-target-stamp/gtest-target-install.rule"
+		},
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/gtest-target-prefix/src/gtest-target-stamp/gtest-target-mkdir.rule"
+		},
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/gtest-target-prefix/src/gtest-target-stamp/gtest-target-download.rule"
+		},
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/gtest-target-prefix/src/gtest-target-stamp/gtest-target-update.rule"
+		},
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/gtest-target-prefix/src/gtest-target-stamp/gtest-target-patch.rule"
+		},
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/gtest-target-prefix/src/gtest-target-stamp/gtest-target-configure.rule"
+		},
+		{
+			"file" : "/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/gtest-target-prefix/src/gtest-target-stamp/gtest-target-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"gtest-target"
+		],
+		"name" : "gtest-target"
+	}
+}
