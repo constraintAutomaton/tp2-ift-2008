@@ -46,7 +46,7 @@ class Graphe
 public:
 
 	// Constructeur
-	Graphe(size_t nbSommets = 10);
+	Graphe(size_t p_nbSommets = 10);
 
 	// Destructeur
 	~Graphe();
