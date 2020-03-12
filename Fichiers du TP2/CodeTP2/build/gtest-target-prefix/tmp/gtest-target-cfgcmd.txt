@@ -1,1 +1,0 @@
-cmd='/usr/bin/cmake;-DCMAKE_INSTALL_PREFIX=/home/ilyes/projects/tp2/tp2-ift-2008/Fichiers du TP2/CodeTP2/build/extern;-GUnix Makefiles;<SOURCE_DIR><SOURCE_SUBDIR>'
