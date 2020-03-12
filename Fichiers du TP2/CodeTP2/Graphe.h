@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <algorithm>
 //Vous pouvez ajouter d'autres librairies de la STL
 
 #ifndef _GRAPHE__H
@@ -29,13 +30,12 @@ namespace TP2
  */
 struct Ponderations
 {
-	float duree;		// La durée du vol en heures (ex. 0.8 heures entre Québec et Montréal)
-	float cout;			// Le cout du trajet en dollars (ex. 220.46 $ pour un vol entre Québec et Montréal)
-	int ns;				// Un niveau de sécurité représentant un indice qui peut être négatif
+	float duree; // La durée du vol en heures (ex. 0.8 heures entre Québec et Montréal)
+	float cout;  // Le cout du trajet en dollars (ex. 220.46 $ pour un vol entre Québec et Montréal)
+	int ns;		 // Un niveau de sécurité représentant un indice qui peut être négatif
 
 	Ponderations(float d, float c, int n) : duree(d), cout(c), ns(n) {}
 };
-
 
 /**
  * \class Graphe
@@ -44,7 +44,6 @@ struct Ponderations
 class Graphe
 {
 public:
-
 	// Constructeur
 	Graphe(size_t p_nbSommets = 10);
 
@@ -57,7 +56,7 @@ public:
 
 	// Donne un nom à un sommet en utlisant son numéro (indice dans le vector).
 	// Exception logic_error si sommet supérieur à nbSommets
-	void nommer(size_t sommet, const std::string& nom);
+	void nommer(size_t sommet, const std::string &nom);
 
 	// Ajoute un arc au graphe
 	// Exception logic_error si source ou destination supérieur à nbSommets
@@ -83,7 +82,7 @@ public:
 
 	// Retourne le numéro d'un sommet
 	// Exception logic_error si nom n'existe pas dans le graphe
-	size_t getNumeroSommet(const std::string& nom) const;
+	size_t getNumeroSommet(const std::string &nom) const;
 
 	// Retourne le nombre de sommet du graphe
 	int getNombreSommets() const;
@@ -97,13 +96,15 @@ public:
 
 	//Surcharge de l'opérateur de sortie.
 	//Ne touchez pas à cette fonction !
-	friend std::ostream& operator<<(std::ostream& out, const Graphe& g)
+	friend std::ostream &operator<<(std::ostream &out, const Graphe &g)
 	{
 		out << "Le graphe contient " << g.nbSommets << " sommet(s) et "
-			<< g.nbArcs << " arc(s)" << std::endl << std::endl;
+			<< g.nbArcs << " arc(s)" << std::endl
+			<< std::endl;
 		for (size_t i = 0; i < g.nbSommets; ++i)
 		{
-			out << "Sommet: " << g.sommets[i] << std::endl << "Voisin(s): ";
+			out << "Sommet: " << g.sommets[i] << std::endl
+				<< "Voisin(s): ";
 
 			if (g.listesAdj[i].size() == 0)
 				out << "Rien";
@@ -119,30 +120,28 @@ public:
 		}
 		return out;
 	}
-
 	//Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité
+	bool noeudExiste(size_t sommet) const;
 
 private:
-
 	std::vector<std::string> sommets; /*!< Le vecteur des sommets */
 
 	struct Arc
 	{
 		size_t destination;
-		Ponderations poids;	// Les pondérations utilisées pour un trajet entre deux villes
+		Ponderations poids; // Les pondérations utilisées pour un trajet entre deux villes
 
 		Arc(size_t dest, Ponderations p) : destination(dest), poids(p) {}
 	};
 
-	std::vector<std::list<Arc> > listesAdj; /*!< les listes d'adjacence */
+	std::vector<std::list<Arc>> listesAdj; /*!< les listes d'adjacence */
 
-	size_t nbSommets;					// Le nombre de sommets dans le graphe
-	size_t nbArcs;						// Le nombre des arcs dans le graphe
+	size_t nbSommets; // Le nombre de sommets dans le graphe
+	size_t nbArcs;	// Le nombre des arcs dans le graphe
 
 	//Vous pouvez ajoutez des méthodes privées si vous sentez leur nécessité
-
 };
 
-}//Fin du namespace
+} // namespace TP2
 
 #endif

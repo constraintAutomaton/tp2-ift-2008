@@ -24,11 +24,5 @@ if(BUILD_TESTING)
   
 endif()
 
-set(SOURCE_FILES
-    Graphe.cpp
-    Graphe.h
-    Principal.cpp
-    ReseauAerien.cpp
-    ReseauAerien.h)
-
-add_executable(CodeTP2 ${SOURCE_FILES})
+add_library(graph STATIC Graphe.cpp)
+target_include_directories(graph PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

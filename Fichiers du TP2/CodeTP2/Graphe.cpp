@@ -15,181 +15,205 @@
 
 namespace TP2
 {
-
-Graphe::Graphe(size_t p_nbSommets):nbSommets(p_nbSommets)
+/**
+ * \fn void Graphe::noeudExiste(size_t sommet) const
+ * \param sommet index du noeud sujet
+ * verifie si le sommet existe
+*/
+bool Graphe::noeudExiste(size_t sommet) const
 {
-	sommets.resize(nbSommets);
-	listesAdj.resize(nbSommets);
+	if (nbSommets <= sommet)
+	{
+		return false;
+	}
+	return true;
 }
+/**
+ * \fn Graphe::Graphe(size_t p_nbSommets):nbSommets(p_nbSommets)
+ * \param p_nbSommets nombre de sommet du graph
+ */
+Graphe::Graphe(size_t p_nbSommets) : nbSommets(p_nbSommets)
+{
+	sommets.resize(nbSommets * 2);
+	listesAdj.resize(nbSommets * 2);
+}
+/**
+ * \fn Graphe::~Graphe()
+ * destructeur du graph
+ */
 Graphe::~Graphe()
 {
-
 }
-
+/**
+ * \fn void Graphe::resize(size_t nouvelleTaille)
+ * \param nouvelleTaille nouvelle taille du graph
+ * change la taille du graph seulement si celui-ci est vide
+ */
 void Graphe::resize(size_t nouvelleTaille)
 {
-	if ( nbSommets == 0)
+	if (nbSommets == 0)
 	{
 		nbSommets = nouvelleTaille;
 	}
-	return;
 }
-
-void Graphe::nommer(size_t sommet, const std::string& nom)
+/**
+ * \fn void Graphe::nommer(size_t sommet, const std::string &nom)
+ * \param nom nom du sommet
+ * donne un nom a un sommet d'apres sont index dans le vecteur des sommet.
+ * renome le sommet si celui-ci est deja nommee
+ */
+void Graphe::nommer(size_t sommet, const std::string &nom)
 {
-	if(nbSommets <= sommet)
+	if (noeudExiste(sommet))
 	{
-		throw std::logic_error("Nombre de sommets fournis invalides");
+		sommets[sommet] = nom;
 	}
-	sommets[sommet]=nom;
-		
-	
+	else
+	{
+		throw std::logic_error("index du sommet invalide");
+	}
 }
-
+/**
+ * \fn void Graphe::ajouterArc(size_t source, size_t destination, float duree, float cout, int ns)
+ * \param source index du noeud sujet
+ * \param destination index du noeud destination
+ * \param duree duree du vol
+ * \param cout cout du trajet en dollars
+ * \param niveau de securite du vol
+ * ajoute un arc entre deux noeud en y attributant une ponderation
+ */
 void Graphe::ajouterArc(size_t source, size_t destination, float duree, float cout, int ns)
 {
-	if( nbSommets <= source)
+	if (noeudExiste(source) && noeudExiste(destination))
 	{
-		throw std::logic_error("Nombre de sommets fournis invalides");
-	}
+		if (arcExiste(source, destination))
+		{
+			throw std::logic_error("L'arc fourni existe déjà");
+		}
+		Ponderations new_pond = Ponderations(duree, cout, ns);
+		Arc new_arc = Arc(destination, new_pond);
 
-	if( nbSommets <= destination)
+		listesAdj[source].push_back[new_arc];
+	}
+	else
 	{
-		throw std::logic_error("Nombre de sommets fournis invalides");
+		throw std::logic_error("index du sommet invalide");
 	}
-
-	if(arcExiste(source,destination))
-	{
-		throw std::logic_error("L'arc fourni existe déjà");
-	}
-	Ponderations *new_pond=new Ponderations(duree,cout,ns);
-	Arc *new_arc=new Arc(destination,*new_pond);
-
-	listesAdj[source].push_back[*new_arc];
 }
+/**
+ * \fn void Graphe::enleverArc(size_t source, size_t destination)
+ * \param source index du noeud sujet
+ * \param destination index du noeud destination
+ * retire l'arc entre deux noeud
+ */
 void Graphe::enleverArc(size_t source, size_t destination)
 {
-	if( nbSommets <= source)
+	if (noeudExiste(source) && noeudExiste(destination))
 	{
-		throw std::logic_error("Nombre de sommets fournis invalides");
-	}
-
-	if( nbSommets <= destination)
-	{
-		throw std::logic_error("Nombre de sommets fournis invalides");
-	}
-		if(arcExiste(source,destination))
-	{
-		throw std::logic_error("L'arc fourni existe déjà");
-	}
-	std::list<Arc> & liste = listesAdj[source];
-	//std::list<Arc>::iterator it ;//=std::find(liste.begin(),liste.end(),it->destination); // Méthode find à implémenter pour liste d'arcs ?? A revoir 
-	
-	
-		for(auto it=liste.begin();it == liste.end();++it)
+		if (arcExiste(source, destination))
 		{
-			if(it->destination == destination)
-			{
-				liste.erase(it);
-			}
-			if(it==liste.end())
-			{
-				throw std::logic_error("L'arc fourni est inexistant");
-			}
+			listesAdj[source].remove_if([&](Arc arc) { return arc.destination == destination; });
 		}
-
+		else
+		{
+			throw std::logic_error("L'arc fourni existe déjà");
+		}
+	}
+	else
+	{
+		throw std::logic_error("index du sommet invalide");
+	}
 }
-
+/**
+ * \fn bool Graphe::arcExiste(size_t source, size_t destination) const
+ * \param source index du noeud sujet
+ * \param destionation index de la destination
+ */
 bool Graphe::arcExiste(size_t source, size_t destination) const
 {
-		if( nbSommets <= source)
+	if (noeudExiste(source) && noeudExiste(destination))
 	{
-		throw std::logic_error("Nombre de sommets fournis invalides");
-	}
 
-	if( nbSommets <= destination)
+		auto refArch = std::find_if(std::begin(listesAdj[source]), std::end(listesAdj[source]),
+									[&](const Arc &el) -> bool { return el.destination == destination; });
+		// refArch n'as pas ete trouve et le dernier element n'a pas la bonne destionation
+		return !(refArch == std::end(listesAdj[source]) && refArch->destination != destination);
+	}
+	else
 	{
-		throw std::logic_error("Nombre de sommets fournis invalides");
+		throw std::logic_error("index du sommet invalide");
 	}
-	const std::list<Arc> & liste  = listesAdj[source];
-
-for(auto it=liste.begin();it != liste.end();++it)
-{
-	if(it->destination == destination)
-			{
-				return true;
-			}
 }
-	return false;
-
-	//std::list<Arc>::iterator it = std::find(liste.begin(),liste.end(),destination); // Même Méthode find à implémenter pour liste d'arcs ?? 
-
-}
-
+/**
+ * \fn std::vector<size_t> Graphe::listerSommetsAdjacents(size_t sommet) const
+ * \param sommet sommet sujet
+ * retourne les indexs des sommet adjacent
+ */
 std::vector<size_t> Graphe::listerSommetsAdjacents(size_t sommet) const
 {
-		if( nbSommets <= sommet)
+	if (noeudExiste(sommet))
 	{
-		throw std::logic_error("Nombre de sommets fournis invalides");
-	}
-	std::vector<size_t> vecteur_return;
-	for(std::list<Arc>::const_iterator it=listesAdj[sommet].begin();it !=listesAdj[sommet].end();++it)
-	{
-		vecteur_return.push_back(it->destination);
-	}
-	return vecteur_return;
-}
-	// Retourne le nom d'un sommet
-	// Exception logic_error si sommet supérieur à nbSommets
-	std::string Graphe::getNomSommet(size_t sommet) const
-	{
-		
-			return sommets[sommet];
-	}
-
-	// Retourne le numéro d'un sommet
-	// Exception logic_error si nom n'existe pas dans le graphe
-	size_t Graphe::getNumeroSommet(const std::string& nom) const
-	{
-		for (size_t i = 0; i < nbSommets; ++i)
+		std::vector<size_t> vecteur_return;
+		for (auto noeud : listesAdj[sommet])
 		{
-			if (sommets[i]==nom)
-			{
-				return i;
-			}
+			vecteur_return.push_back(noeud.destination);
+		}
+		return vecteur_return;
+	}
+	else
+	{
+		throw std::logic_error("index du sommet invalide");
+	}
+}
+// Retourne le nom d'un sommet
+// Exception logic_error si sommet supérieur à nbSommets
+std::string Graphe::getNomSommet(size_t sommet) const
+{
 
+	return sommets[sommet];
+}
+
+// Retourne le numéro d'un sommet
+// Exception logic_error si nom n'existe pas dans le graphe
+size_t Graphe::getNumeroSommet(const std::string &nom) const
+{
+	for (size_t i = 0; i < nbSommets; ++i)
+	{
+		if (sommets[i] == nom)
+		{
+			return i;
 		}
 	}
-
-	// Retourne le nombre de sommet du graphe
-	int Graphe::getNombreSommets() const
-	{
-		return nbSommets;
-	}
-
-	// Retourne le nombre des arcs du graphe
-	int Graphe::getNombreArcs() const
-	{
-		return nbArcs;
-	}
-
-	// Retourne les pondérations se trouvant dans un arc (source -> destination)
-	// Exception logic_error si source ou destination supérieur à nbSommets
-	Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
-	{
-		if( nbSommets <= source)
-	{
-		throw std::logic_error("Nombre de sommets fournis invalides");
-	}
-		const std::list<Arc> & liste  = listesAdj[source];
-
-for(auto it=liste.begin();it != liste.end();++it)
-{
-	if(it->destination == destination)
-			{
-				return it->poids;
-				
-			}
 }
+
+// Retourne le nombre de sommet du graphe
+int Graphe::getNombreSommets() const
+{
+	return nbSommets;
+}
+
+// Retourne le nombre des arcs du graphe
+int Graphe::getNombreArcs() const
+{
+	return nbArcs;
+}
+
+// Retourne les pondérations se trouvant dans un arc (source -> destination)
+// Exception logic_error si source ou destination supérieur à nbSommets
+Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
+{
+	if (nbSommets <= source)
+	{
+		throw std::logic_error("index du sommet invalide");
 	}
-}//Fin du namespace
+	const std::list<Arc> &liste = listesAdj[source];
+
+	for (auto it = liste.begin(); it != liste.end(); ++it)
+	{
+		if (it->destination == destination)
+		{
+			return it->poids;
+		}
+	}
+}
+} // namespace TP2
