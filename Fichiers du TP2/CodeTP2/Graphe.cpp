@@ -34,8 +34,8 @@ bool Graphe::noeudExiste(size_t sommet) const
  */
 Graphe::Graphe(size_t p_nbSommets) : nbSommets(p_nbSommets)
 {
-	sommets.resize(nbSommets * 2);
-	listesAdj.resize(nbSommets * 2);
+	sommets.resize(nbSommets);
+	listesAdj.resize(nbSommets);
 }
 /**
  * \fn Graphe::~Graphe()
@@ -154,6 +154,7 @@ std::vector<size_t> Graphe::listerSommetsAdjacents(size_t sommet) const
 	if (noeudExiste(sommet))
 	{
 		std::vector<size_t> vecteur_return;
+		vecteur_return.reserve(nbSommets);
 		for (auto noeud : listesAdj[sommet])
 		{
 			vecteur_return.push_back(noeud.destination);
@@ -165,16 +166,24 @@ std::vector<size_t> Graphe::listerSommetsAdjacents(size_t sommet) const
 		throw std::logic_error("index du sommet invalide");
 	}
 }
-// Retourne le nom d'un sommet
-// Exception logic_error si sommet supérieur à nbSommets
+/**
+ * \fn std::string Graphe::getNomSommet(size_t sommet) const
+ * \param sommet index du sommet sujet
+ * retourne le nom du sommet
+ */
 std::string Graphe::getNomSommet(size_t sommet) const
 {
-
-	return sommets[sommet];
+	if (noeudExiste(sommet))
+	{
+		return sommets[sommet];
+	}
+	throw std::logic_error("le sommet n'existe pas");
 }
 
-// Retourne le numéro d'un sommet
-// Exception logic_error si nom n'existe pas dans le graphe
+/**
+ * \fn size_t Graphe::getNumeroSommet(const std::string &nom) const
+ * \param nom nom du noeud recherche, retourne le premier noeud ayant ce nom
+ */
 size_t Graphe::getNumeroSommet(const std::string &nom) const
 {
 	for (size_t i = 0; i < nbSommets; ++i)
@@ -184,36 +193,43 @@ size_t Graphe::getNumeroSommet(const std::string &nom) const
 			return i;
 		}
 	}
+	throw std::logic_error("le sommet n'existe pas");
 }
-
-// Retourne le nombre de sommet du graphe
+/**
+ * \fn int Graphe::getNombreSommets() const
+ * retourne le nombre de sommet
+ */
 int Graphe::getNombreSommets() const
 {
 	return nbSommets;
 }
-
-// Retourne le nombre des arcs du graphe
+/**
+ * \fn int Graphe::getNombreArcs() const
+ * retourne le nombre d'arcs
+ */
 int Graphe::getNombreArcs() const
 {
 	return nbArcs;
 }
 
-// Retourne les pondérations se trouvant dans un arc (source -> destination)
-// Exception logic_error si source ou destination supérieur à nbSommets
+/**
+ * \fn Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
+ * \param source sommet sujet
+ * \param destination sommet destionation
+ * retourne la ponderation d'un noeud adjacent
+ */
 Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
 {
-	if (nbSommets <= source)
+	if (noeudExiste(source))
+	{
+		auto refArch = std::find_if(std::begin(listesAdj[source]), std::end(listesAdj[source]),
+									[&](const Arc &el) -> bool { return el.destination == destination; });
+		return refArch->poids;
+	}
+	else
 	{
 		throw std::logic_error("index du sommet invalide");
 	}
-	const std::list<Arc> &liste = listesAdj[source];
 
-	for (auto it = liste.begin(); it != liste.end(); ++it)
-	{
-		if (it->destination == destination)
-		{
-			return it->poids;
-		}
-	}
 }
 } // namespace TP2
