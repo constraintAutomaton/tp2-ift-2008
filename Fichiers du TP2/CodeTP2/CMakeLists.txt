@@ -24,5 +24,5 @@ if(BUILD_TESTING)
   
 endif()
 
-add_library(graph STATIC Graphe.cpp)
-target_include_directories(graph PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(graphe STATIC Graphe.cpp)
+target_include_directories(graphe PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

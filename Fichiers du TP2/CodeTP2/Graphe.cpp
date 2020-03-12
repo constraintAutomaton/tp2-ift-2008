@@ -93,7 +93,7 @@ void Graphe::ajouterArc(size_t source, size_t destination, float duree, float co
 		Ponderations new_pond = Ponderations(duree, cout, ns);
 		Arc new_arc = Arc(destination, new_pond);
 
-		listesAdj[source].push_back[new_arc];
+		listesAdj[source].push_back(new_arc);
 	}
 	else
 	{
