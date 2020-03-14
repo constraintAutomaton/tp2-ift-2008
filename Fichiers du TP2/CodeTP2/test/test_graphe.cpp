@@ -19,3 +19,8 @@ protected:
         delete graphVide;
     }
 };
+
+TEST_F(Studs, GivenALabyrintheWhenConstructThenTheLabyrinhtheHasDefaultAttribute)
+{
+    ASSERT_EQ(1,1);
+}
