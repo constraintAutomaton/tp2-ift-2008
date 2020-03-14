@@ -15,6 +15,16 @@
 
 namespace TP2
 {
+
+/**
+ * \fn Graphe::Graphe(size_t p_nbSommets):nbSommets(p_nbSommets)
+ * \param p_nbSommets nombre de sommet du graph
+ */
+Graphe::Graphe(size_t p_nbSommets) : nbSommets(p_nbSommets), nbArcs(0)
+{
+	sommets.resize(nbSommets);
+	listesAdj.resize(nbSommets);
+}
 /**
  * \fn void Graphe::noeudExiste(size_t sommet) const
  * \param sommet index du noeud sujet
@@ -29,15 +39,6 @@ bool Graphe::noeudExiste(size_t sommet) const
 	return true;
 }
 /**
- * \fn Graphe::Graphe(size_t p_nbSommets):nbSommets(p_nbSommets)
- * \param p_nbSommets nombre de sommet du graph
- */
-Graphe::Graphe(size_t p_nbSommets) : nbSommets(p_nbSommets)
-{
-	sommets.resize(nbSommets);
-	listesAdj.resize(nbSommets);
-}
-/**
  * \fn Graphe::~Graphe()
  * destructeur du graph
  */
@@ -47,14 +48,13 @@ Graphe::~Graphe()
 /**
  * \fn void Graphe::resize(size_t nouvelleTaille)
  * \param nouvelleTaille nouvelle taille du graph
- * change la taille du graph seulement si celui-ci est vide
+ * change la taille du graph, il est supposer que le graph est vide, aucune validation est faite
+ * afin de s'assurer de cela
  */
 void Graphe::resize(size_t nouvelleTaille)
 {
-	if (nbSommets == 0)
-	{
-		nbSommets = nouvelleTaille;
-	}
+
+	nbSommets = nouvelleTaille;
 }
 /**
  * \fn void Graphe::nommer(size_t sommet, const std::string &nom)
@@ -92,8 +92,8 @@ void Graphe::ajouterArc(size_t source, size_t destination, float duree, float co
 		}
 		Ponderations new_pond = Ponderations(duree, cout, ns);
 		Arc new_arc = Arc(destination, new_pond);
-
 		listesAdj[source].push_back(new_arc);
+		nbArcs++;
 	}
 	else
 	{
@@ -113,10 +113,11 @@ void Graphe::enleverArc(size_t source, size_t destination)
 		if (arcExiste(source, destination))
 		{
 			listesAdj[source].remove_if([&](Arc arc) { return arc.destination == destination; });
+			nbArcs--;
 		}
 		else
 		{
-			throw std::logic_error("L'arc fourni existe déjà");
+			throw std::logic_error("L'arc n'existe pas");
 		}
 	}
 	else
@@ -136,8 +137,11 @@ bool Graphe::arcExiste(size_t source, size_t destination) const
 
 		auto refArch = std::find_if(std::begin(listesAdj[source]), std::end(listesAdj[source]),
 									[&](const Arc &el) -> bool { return el.destination == destination; });
-		// refArch n'as pas ete trouve et le dernier element n'a pas la bonne destionation
-		return !(refArch == std::end(listesAdj[source]) && refArch->destination != destination);
+
+		const bool exist = (refArch != std::end(listesAdj[source]) ||
+							(refArch == std::end(listesAdj[source]) &&
+							 (refArch->destination == destination)));
+		return exist;
 	}
 	else
 	{
@@ -230,6 +234,16 @@ Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
 	{
 		throw std::logic_error("index du sommet invalide");
 	}
-
 }
+/**
+ * \fn 	bool isEqual( Ponderations poid1, Ponderations poid2)
+ * \param poid1 premiere ponderation
+ * \param poid2 deuxieme ponderation
+ * verifie si 2 ponderation sont egal
+ */
+bool Graphe::isEqual(Ponderations poid1, Ponderations poid2) const
+{
+	return poid1.cout == poid2.cout && poid1.duree == poid2.duree && poid1.ns == poid2.ns;
+}
+
 } // namespace TP2

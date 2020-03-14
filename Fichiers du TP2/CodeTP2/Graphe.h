@@ -138,6 +138,7 @@ private:
 
 	size_t nbSommets; // Le nombre de sommets dans le graphe
 	size_t nbArcs;	// Le nombre des arcs dans le graphe
+	bool isEqual(Ponderations poid1, Ponderations poid2) const;
 
 	//Vous pouvez ajoutez des méthodes privées si vous sentez leur nécessité
 };
