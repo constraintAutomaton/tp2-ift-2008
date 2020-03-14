@@ -138,9 +138,7 @@ bool Graphe::arcExiste(size_t source, size_t destination) const
 		auto refArch = std::find_if(std::begin(listesAdj[source]), std::end(listesAdj[source]),
 									[&](const Arc &el) -> bool { return el.destination == destination; });
 
-		const bool exist = (refArch != std::end(listesAdj[source]) ||
-							(refArch == std::end(listesAdj[source]) &&
-							 (refArch->destination == destination)));
+		const bool exist = (refArch != std::end(listesAdj[source]));
 		return exist;
 	}
 	else
@@ -245,5 +243,6 @@ bool Graphe::isEqual(Ponderations poid1, Ponderations poid2) const
 {
 	return poid1.cout == poid2.cout && poid1.duree == poid2.duree && poid1.ns == poid2.ns;
 }
+
 
 } // namespace TP2

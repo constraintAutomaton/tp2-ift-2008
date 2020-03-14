@@ -15,8 +15,8 @@ protected:
     float cout1 = 3.2;
     float ns1 = 2;
 
-    size_t source2 = 3;
-    size_t destination2 = 4;
+    size_t source2 = 1;
+    size_t destination2 = 2;
     float duree2 = 2.1;
     float cout2 = 3.2;
     float ns2 = 2;
@@ -113,9 +113,11 @@ TEST_F(Studs, GivenAGraphWithTwoArcWhenEnleverAnArchThenArcShouldBeRemove)
 }
 TEST_F(Studs, GivenAGraphWithANArcWhenEnleverAnArchThatDoesntExistThenItShouldThrowError)
 {
-    const size_t source = 1;
-    const size_t destionation = 1;
-    ASSERT_THROW(graphAvecUnArc->enleverArc(source, destination1), logic_error);
+
+    const size_t source_sujet = 1;
+    const size_t destionation_sujet = 1;
+    cout << graphAvecUnArc->arcExiste(source_sujet, destionation_sujet) << endl;
+    ASSERT_THROW(graphAvecUnArc->enleverArc(source_sujet, destionation_sujet), logic_error);
     ASSERT_EQ(graphAvecUnArc->getNombreArcs(), 1);
 }
 TEST_F(Studs, GivenAGraphWithANArcWhenEnleverAnArchOutOfIndexThenItShouldThrowError)

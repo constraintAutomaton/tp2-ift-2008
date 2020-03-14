@@ -122,7 +122,6 @@ public:
 	}
 	//Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité
 	bool noeudExiste(size_t sommet) const;
-
 private:
 	std::vector<std::string> sommets; /*!< Le vecteur des sommets */
 
@@ -141,6 +140,7 @@ private:
 	bool isEqual(Ponderations poid1, Ponderations poid2) const;
 
 	//Vous pouvez ajoutez des méthodes privées si vous sentez leur nécessité
+
 };
 
 } // namespace TP2
