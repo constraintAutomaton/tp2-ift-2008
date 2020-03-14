@@ -116,7 +116,6 @@ TEST_F(Studs, GivenAGraphWithANArcWhenEnleverAnArchThatDoesntExistThenItShouldTh
 
     const size_t source_sujet = 1;
     const size_t destionation_sujet = 1;
-    cout << graphAvecUnArc->arcExiste(source_sujet, destionation_sujet) << endl;
     ASSERT_THROW(graphAvecUnArc->enleverArc(source_sujet, destionation_sujet), logic_error);
     ASSERT_EQ(graphAvecUnArc->getNombreArcs(), 1);
 }

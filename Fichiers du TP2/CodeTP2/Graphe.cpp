@@ -224,9 +224,17 @@ Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
 {
 	if (noeudExiste(source))
 	{
-		auto refArch = std::find_if(std::begin(listesAdj[source]), std::end(listesAdj[source]),
-									[&](const Arc &el) -> bool { return el.destination == destination; });
-		return refArch->poids;
+		if (arcExiste(source, destination))
+		{
+			auto refArch = std::find_if(std::begin(listesAdj[source]), std::end(listesAdj[source]),
+										[&](const Arc &el) -> bool { return el.destination == destination; });
+			return refArch->poids;
+		}
+		else
+		{
+			throw std::logic_error("l'arc n'existe pas");
+		}
+		
 	}
 	else
 	{
@@ -243,6 +251,5 @@ bool Graphe::isEqual(Ponderations poid1, Ponderations poid2) const
 {
 	return poid1.cout == poid2.cout && poid1.duree == poid2.duree && poid1.ns == poid2.ns;
 }
-
 
 } // namespace TP2
