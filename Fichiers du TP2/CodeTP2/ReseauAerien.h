@@ -81,7 +81,8 @@ public:
 private:
 	Graphe unReseau;	   // Le type ReseauAerien est composé d'un graphe
 	std::string nomReseau; // Le nom du reseau (exemple: Air Canada)
-
+	float relachement(float ponderationSource, float ponderationTrajet, float ponderationDestination) const;
+	Chemin bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const;
 	// Vous pouvez définir des constantes ici.
 
 	//Vous pouvez ajoutez des méthodes privées si vous sentez leur nécessité

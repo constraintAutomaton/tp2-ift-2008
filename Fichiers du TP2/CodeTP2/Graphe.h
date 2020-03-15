@@ -23,18 +23,42 @@
 
 namespace TP2
 {
-
+enum AttributPonderations
+{
+	duree,
+	cout,
+	ns
+};
 /**
  * \struct Ponderations
  * \brief Une struture utilisée pour stocker les pondérations utilisées sur les arcs
  */
 struct Ponderations
 {
+
 	float duree; // La durée du vol en heures (ex. 0.8 heures entre Québec et Montréal)
 	float cout;  // Le cout du trajet en dollars (ex. 220.46 $ pour un vol entre Québec et Montréal)
 	int ns;		 // Un niveau de sécurité représentant un indice qui peut être négatif
-
 	Ponderations(float d, float c, int n) : duree(d), cout(c), ns(n) {}
+
+	float getAttribute(AttributPonderations attribute) const
+	{
+		switch (attribute)
+		{
+		case AttributPonderations::duree:
+		{
+			return duree;
+		}
+		case AttributPonderations::cout:
+		{
+			return cout;
+		}
+		case AttributPonderations::ns:
+		{
+			return ns;
+		}
+		}
+	}
 };
 
 /**
@@ -122,6 +146,7 @@ public:
 	}
 	//Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité
 	bool noeudExiste(size_t sommet) const;
+
 private:
 	std::vector<std::string> sommets; /*!< Le vecteur des sommets */
 
@@ -140,7 +165,6 @@ private:
 	bool isEqual(Ponderations poid1, Ponderations poid2) const;
 
 	//Vous pouvez ajoutez des méthodes privées si vous sentez leur nécessité
-
 };
 
 } // namespace TP2
