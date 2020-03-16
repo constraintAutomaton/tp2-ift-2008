@@ -112,6 +112,14 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
     const size_t indexDestination = unReseau.getNumeroSommet(destination);
     return makeChemin(y, indexSource, indexDestination, stable);
 }
+/**
+ * \fn Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> y, size_t indexOrigin, size_t indexDestination, bool stable) const
+ * \param y valeur des noeud a la suite d'un algorithme plus cours chemin
+ * \param indexOrigin index de la source
+ * \param indexDestination index de la destination
+ * \param stable indique si l'algorithme a ete stable
+ * cree un chemin a partir des resultat des diferent relachement
+ */
 Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> y, size_t indexOrigin, size_t indexDestination, bool stable) const
 {
     Chemin chemin;
