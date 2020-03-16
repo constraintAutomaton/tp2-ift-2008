@@ -16,6 +16,7 @@
 #include <climits>
 #include <vector>
 #include <map>
+#include <utility>
 
 #ifndef _RESEAUAERIEN__H
 #define _RESEAUAERIEN__H
@@ -83,6 +84,7 @@ private:
 	std::string nomReseau; // Le nom du reseau (exemple: Air Canada)
 	float relachement(float ponderationSource, float ponderationTrajet, float ponderationDestination) const;
 	Chemin bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const;
+	Chemin makeChemin(const std::vector<std::pair<size_t, float>> y,size_t indexOrigin,size_t indexDestination,bool stable) const;
 	// Vous pouvez définir des constantes ici.
 
 	//Vous pouvez ajoutez des méthodes privées si vous sentez leur nécessité
