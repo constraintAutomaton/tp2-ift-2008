@@ -86,7 +86,7 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
     const size_t indexSource = unReseau.getNumeroSommet(origine);
     std::vector<std::pair<size_t, float>> y = std::vector(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
     y.at(indexSource).second = 0;
-    int k = 0;
+    int k = 1;
     bool stable = true;
     const int n = unReseau.getNombreArcs();
     do
@@ -108,7 +108,7 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
         }
 
         k++;
-    } while (stable == false && k < n);
+    } while (stable == false && k < n + 1);
     const size_t indexDestination = unReseau.getNumeroSommet(destination);
     return makeChemin(y, indexSource, indexDestination, stable);
 }
