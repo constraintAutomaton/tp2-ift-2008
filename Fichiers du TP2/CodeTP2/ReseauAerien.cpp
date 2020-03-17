@@ -97,13 +97,13 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
             for (auto arrive : unReseau.listerSommetsAdjacents(sommet))
             {
                 const float ponderation = unReseau.getPonderationsArc(sommet, arrive).getAttribute(attribut);
-                const float valPrecedente = y[arrive].second;
-                y[arrive].second = relachement(y[sommet].second, y[arrive].second, ponderation);
-                if (y[arrive].second != valPrecedente)
+                const float valPrecedente = y.at(arrive).second;
+                y.at(arrive).second = relachement(y.at(sommet).second, y.at(arrive).second, ponderation);
+                if (y.at(arrive).second != valPrecedente)
                 {
-                    y[arrive].first = y[sommet].first;
+                    y.at(arrive).first = y.at(sommet).first;
                 }
-                stable = y[arrive].second < (y[sommet].second + ponderation);
+                stable = y.at(arrive).second < (y.at(sommet).second + ponderation);
             }
         }
 
@@ -144,7 +144,7 @@ Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> y, s
         chemin.coutTotal += ponderation.cout;
         chemin.nsTotal += ponderation.ns;
         //suivant
-        origineCourante = y[origineCourante].first;
+        origineCourante = y.at(origineCourante).first;
         i++;
         if (i > y.size())
         {
