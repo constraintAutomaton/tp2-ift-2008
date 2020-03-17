@@ -92,7 +92,7 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
     do
     {
         stable = true;
-        for (int sommet = 1; sommet < (n-1); sommet++)
+        for (int sommet = 0; sommet < n; sommet++)
         {
             for (auto arrive : unReseau.listerSommetsAdjacents(sommet))
             {
