@@ -130,7 +130,7 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
     y.at(indexSource).second = 0;
     int k = 1;
     bool stable = true;
-    const int n = unReseau.getNombreArcs();
+    const int n = unReseau.getNombreSommets();
     do
     {
         stable = true;
@@ -143,7 +143,7 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
                 y.at(arrive).second = relachement(y.at(sommet).second, y.at(arrive).second, ponderation);
                 if (y.at(arrive).second != valPrecedente)
                 {
-                    y.at(arrive).first = y.at(sommet).first;
+                    y.at(arrive).first = sommet;
                 }
                 stable = y.at(arrive).second < (y.at(sommet).second + ponderation);
             }
