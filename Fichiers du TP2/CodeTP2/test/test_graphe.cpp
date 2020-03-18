@@ -151,7 +151,7 @@ TEST_F(Studs, GivenAGraphWhenAjouterArcOnTheSourceItSelfThisArcShouldExistWithTh
     graphVide->ajouterArc(source, destination, duree, cout, ns);
 
     ASSERT_EQ(graphVide->getPonderationsArc(source, destination).duree, duree);
-    ASSERT_EQ(graphVide->getPonderationsArc(source, destination).cout, cout);
+    ASSERT_EQ(graphVide->getPonderationsArc(source, destination).coutt, cout);
     ASSERT_EQ(graphVide->getPonderationsArc(source, destination).ns, ns);
 }
 TEST_F(Studs, GivenAGraphWhenAjouterArcThisArcShouldExistWithTheRightParameter)
@@ -165,7 +165,7 @@ TEST_F(Studs, GivenAGraphWhenAjouterArcThisArcShouldExistWithTheRightParameter)
     graphVide->ajouterArc(source, destination, duree, cout, ns);
 
     ASSERT_EQ(graphVide->getPonderationsArc(source, destination).duree, duree);
-    ASSERT_EQ(graphVide->getPonderationsArc(source, destination).cout, cout);
+    ASSERT_EQ(graphVide->getPonderationsArc(source, destination).coutt, cout);
     ASSERT_EQ(graphVide->getPonderationsArc(source, destination).ns, ns);
 
     ASSERT_EQ(graphVide->arcExiste(source, destination), true);

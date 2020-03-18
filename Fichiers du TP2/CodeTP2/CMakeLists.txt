@@ -26,3 +26,10 @@ endif()
 
 add_library(graphe STATIC Graphe.cpp)
 target_include_directories(graphe PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_library(reseau STATIC ReseauAerien.cpp)
+target_link_libraries(reseau graphe)
+target_include_directories(reseau PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}) 
+
+add_executable(principal Principal.cpp)
+target_link_libraries(principal graphe reseau)

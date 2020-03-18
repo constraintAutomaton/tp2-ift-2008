@@ -10,7 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
-
+#include <string>
 #include "ReseauAerien.h"
 
 using namespace std;
@@ -28,7 +28,7 @@ int main()
 	clock_t startTime, endTime;  	//Pour mesurer l'efficacité des algorithmes
 
 
-	cout << "Bienvenue dans votre reseau aerien !" << endl;
+	std::cout << "Bienvenue dans votre reseau aerien !" << endl;
 	//Affichage du menu
 	cout << "------------------ Menu --------------------------------" << endl;
 	cout << "1 - Charger le reseau a partir d'un fichier texte." << endl;

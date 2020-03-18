@@ -21,12 +21,14 @@
 #ifndef _GRAPHE__H
 #define _GRAPHE__H
 
+
+
 namespace TP2
 {
 enum AttributPonderations
 {
 	duree,
-	cout,
+	coutt,
 	ns
 };
 /**
@@ -37,9 +39,9 @@ struct Ponderations
 {
 
 	float duree; // La durée du vol en heures (ex. 0.8 heures entre Québec et Montréal)
-	float cout;  // Le cout du trajet en dollars (ex. 220.46 $ pour un vol entre Québec et Montréal)
+	float coutt;  // Le coutt du trajet en dollars (ex. 220.46 $ pour un vol entre Québec et Montréal)
 	int ns;		 // Un niveau de sécurité représentant un indice qui peut être négatif
-	Ponderations(float d, float c, int n) : duree(d), cout(c), ns(n) {}
+	Ponderations(float d, float c, int n) : duree(d), coutt(c), ns(n) {}
 
 	float getAttribute(AttributPonderations attribute) const
 	{
@@ -49,9 +51,9 @@ struct Ponderations
 		{
 			return duree;
 		}
-		case AttributPonderations::cout:
+		case AttributPonderations::coutt:
 		{
-			return cout;
+			return coutt;
 		}
 		case AttributPonderations::ns:
 		{

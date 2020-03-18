@@ -12,8 +12,9 @@
 #include "ReseauAerien.h"
 #include <sstream>
 #include <fstream>
+#include <climits>
 //vous pouvez inclure d'autres librairies si c'est nécessaire
-
+ 
 namespace TP2
 {
 /**
@@ -67,12 +68,53 @@ Chemin ReseauAerien::rechercheCheminBellManFord(const std::string &origine, cons
     case 1:
         return bellManFord(origine, destination, AttributPonderations::duree);
     case 2:
-        return bellManFord(origine, destination, AttributPonderations::cout);
+        return bellManFord(origine, destination, AttributPonderations::coutt);
     case 3:
         return bellManFord(origine, destination, AttributPonderations::ns);
     default:
         throw std::logic_error("type de trajet mal definie");
     }
+}
+Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const std::string &destination, bool dureeCout) const
+{
+    AttributPonderations attribut;
+    if(dureeCout)
+    {
+    attribut = duree;
+    }
+    else
+    {
+        attribut= coutt;
+    }
+    int index_max= unReseau.getNombreSommets(); 
+    const size_t index_source = unReseau.getNumeroSommet(origine);
+    std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
+    y.at(index_source).second = 0;
+    int k = 1;
+    bool connue = true;
+    const int n_arc = unReseau.getNombreArcs();
+   do
+   {
+       connue = true;
+        for (int sommet = 0; sommet < index_max; sommet++)
+        {
+            for (auto arrive : unReseau.listerSommetsAdjacents(sommet))
+            {
+                const float ponderation = unReseau.getPonderationsArc(sommet, arrive).getAttribute(attribut);
+                const float valPrecedente = y.at(arrive).second;
+                y.at(arrive).second = relachement(y.at(sommet).second, y.at(arrive).second, ponderation);
+                if (y.at(arrive).second != valPrecedente)
+                {
+                    y.at(arrive).first = y.at(sommet).first;
+                }
+                connue = y.at(arrive).second < (y.at(sommet).second + ponderation);
+            }
+        }
+
+        k++;
+   } while (connue == false && k < n_arc + 1);
+   const size_t indexDestination = unReseau.getNumeroSommet(destination);
+    return makeChemin(y, index_source, indexDestination, connue);
 }
 /**
  * \fn Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
@@ -84,7 +126,7 @@ Chemin ReseauAerien::rechercheCheminBellManFord(const std::string &origine, cons
 Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
 {
     const size_t indexSource = unReseau.getNumeroSommet(origine);
-    std::vector<std::pair<size_t, float>> y = std::vector(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
+    std::vector<std::pair<size_t, float>> y (unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
     y.at(indexSource).second = 0;
     int k = 1;
     bool stable = true;
@@ -141,7 +183,7 @@ Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> y, s
         const Ponderations ponderation = unReseau.getPonderationsArc(destinationCourante, origineCourante);
         // construction du chemin
         chemin.dureeTotale += ponderation.duree;
-        chemin.coutTotal += ponderation.cout;
+        chemin.coutTotal += ponderation.coutt;
         chemin.nsTotal += ponderation.ns;
         //suivant
         origineCourante = y.at(origineCourante).first;

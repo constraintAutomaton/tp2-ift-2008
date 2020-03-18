@@ -22,8 +22,7 @@ namespace TP2
  */
 Graphe::Graphe(size_t p_nbSommets) : nbSommets(p_nbSommets), nbArcs(0)
 {
-	sommets.resize(nbSommets);
-	listesAdj.resize(nbSommets);
+	resize(nbSommets);
 }
 /**
  * \fn void Graphe::noeudExiste(size_t sommet) const
@@ -52,9 +51,11 @@ Graphe::~Graphe()
  * afin de s'assurer de cela
  */
 void Graphe::resize(size_t nouvelleTaille)
-{
-
+{	
 	nbSommets = nouvelleTaille;
+	sommets.resize(nbSommets);
+	listesAdj.resize(nbSommets);
+	
 }
 /**
  * \fn void Graphe::nommer(size_t sommet, const std::string &nom)
@@ -92,7 +93,7 @@ void Graphe::ajouterArc(size_t source, size_t destination, float duree, float co
 		}
 		Ponderations new_pond = Ponderations(duree, cout, ns);
 		Arc new_arc = Arc(destination, new_pond);
-		listesAdj[source].push_back(new_arc);
+		listesAdj.at(source).push_back(new_arc);
 		nbArcs++;
 	}
 	else
@@ -190,7 +191,7 @@ size_t Graphe::getNumeroSommet(const std::string &nom) const
 {
 	for (size_t i = 0; i < nbSommets; ++i)
 	{
-		if (sommets[i] == nom)
+		if (sommets.at(i) == nom)
 		{
 			return i;
 		}
@@ -249,7 +250,7 @@ Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
  */
 bool Graphe::isEqual(Ponderations poid1, Ponderations poid2) const
 {
-	return poid1.cout == poid2.cout && poid1.duree == poid2.duree && poid1.ns == poid2.ns;
+	return poid1.coutt == poid2.coutt && poid1.duree == poid2.duree && poid1.ns == poid2.ns;
 }
 
 } // namespace TP2
