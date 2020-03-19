@@ -85,9 +85,9 @@ private:
 	float relachement(float ponderationSource, float ponderationTrajet, float ponderationDestination) const;
 	Chemin bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const;
 	Chemin initialiseChemin(int tailleListeVide) const;
-	Chemin makeChemin(const std::vector<std::pair<size_t, float>> y, size_t indexOrigin, size_t indexDestination, bool stable = true) const;
+	Chemin makeChemin(const std::vector<std::pair<size_t, float>> &y, size_t indexOrigin, size_t indexDestination, bool stable = true) const;
 	bool iterationTrouverPlusCoursChemin(size_t source, size_t arrive, std::vector<std::pair<size_t, float>> &y, AttributPonderations attribut) const;
-	void ajoutElementAUnChemin(Chemin &chemin, const Ponderations &ponderation) const;
+	void ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &ponderation,const std::string &ville) const;
 	// Vous pouvez définir des constantes ici.
 
 	//Vous pouvez ajoutez des méthodes privées si vous sentez leur nécessité

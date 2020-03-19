@@ -126,8 +126,11 @@ Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const s
 Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
 {
     const size_t indexSource = unReseau.getNumeroSommet(origine);
+    // ponderation des sommet
     std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
+    // met la valeur de la source a 0
     y.at(indexSource).second = 0;
+    // nombre d'iteration
     int k = 1;
     bool stable = true;
     const int n = unReseau.getNombreSommets();
@@ -141,7 +144,6 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
                 stable = iterationTrouverPlusCoursChemin(sommet, arrive, y, attribut);
             }
         }
-
         k++;
     } while (stable == false && k < n + 1);
     const size_t indexDestination = unReseau.getNumeroSommet(destination);
@@ -155,7 +157,7 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
  * \param stable indique si l'algorithme a ete stable
  * cree un chemin a partir des resultat des diferent relachement
  */
-Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> y, size_t indexOrigin, size_t indexDestination, bool stable) const
+Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> &y, size_t indexOrigin, size_t indexDestination, bool stable) const
 {
     Chemin chemin = initialiseChemin(y.size());
     chemin.reussi = stable;
@@ -223,6 +225,7 @@ bool ReseauAerien::iterationTrouverPlusCoursChemin(size_t source, size_t arrive,
     const float ponderation = unReseau.getPonderationsArc(source, arrive).getAttribute(attribut);
     const float valPrecedente = y.at(arrive).second;
     y.at(arrive).second = relachement(y.at(source).second, y.at(arrive).second, ponderation);
+    // on change le predecesseur si le relachement a fait changer une valeur
     if (y.at(arrive).second != valPrecedente)
     {
         y.at(arrive).first = source;
