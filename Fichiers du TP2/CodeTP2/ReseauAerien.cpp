@@ -110,7 +110,6 @@ Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const s
                 connue = y.at(arrive).second < (y.at(sommet).second + ponderation);
             }
         }
-
         k++;
     } while (connue == false && k < n_arc + 1);
     const size_t indexDestination = unReseau.getNumeroSommet(destination);
@@ -166,7 +165,7 @@ Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> &y, 
     int i = 0;
     while (origineCourante != indexOrigin)
     {
-        const size_t destinationCourante = y[origineCourante].first;
+        const size_t destinationCourante = y.at(origineCourante).first;
         // on inverse,car on marche a reculons
         const Ponderations ponderation = unReseau.getPonderationsArc(destinationCourante, origineCourante);
         // ajoute la ville et ses ponderation au chemin
