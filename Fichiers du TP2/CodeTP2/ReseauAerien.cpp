@@ -14,7 +14,7 @@
 #include <fstream>
 #include <climits>
 //vous pouvez inclure d'autres librairies si c'est nécessaire
- 
+
 namespace TP2
 {
 /**
@@ -78,24 +78,24 @@ Chemin ReseauAerien::rechercheCheminBellManFord(const std::string &origine, cons
 Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const std::string &destination, bool dureeCout) const
 {
     AttributPonderations attribut;
-    if(dureeCout)
+    if (dureeCout)
     {
-    attribut = duree;
+        attribut = duree;
     }
     else
     {
-        attribut= coutt;
+        attribut = coutt;
     }
-    int index_max= unReseau.getNombreSommets(); 
+    int index_max = unReseau.getNombreSommets();
     const size_t index_source = unReseau.getNumeroSommet(origine);
     std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
     y.at(index_source).second = 0;
     int k = 1;
     bool connue = true;
     const int n_arc = unReseau.getNombreArcs();
-   do
-   {
-       connue = true;
+    do
+    {
+        connue = true;
         for (int sommet = 0; sommet < index_max; sommet++)
         {
             for (auto arrive : unReseau.listerSommetsAdjacents(sommet))
@@ -112,8 +112,8 @@ Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const s
         }
 
         k++;
-   } while (connue == false && k < n_arc + 1);
-   const size_t indexDestination = unReseau.getNumeroSommet(destination);
+    } while (connue == false && k < n_arc + 1);
+    const size_t indexDestination = unReseau.getNumeroSommet(destination);
     return makeChemin(y, index_source, indexDestination, connue);
 }
 /**
@@ -126,7 +126,7 @@ Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const s
 Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
 {
     const size_t indexSource = unReseau.getNumeroSommet(origine);
-    std::vector<std::pair<size_t, float>> y (unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
+    std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
     y.at(indexSource).second = 0;
     int k = 1;
     bool stable = true;
@@ -138,14 +138,7 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
         {
             for (auto arrive : unReseau.listerSommetsAdjacents(sommet))
             {
-                const float ponderation = unReseau.getPonderationsArc(sommet, arrive).getAttribute(attribut);
-                const float valPrecedente = y.at(arrive).second;
-                y.at(arrive).second = relachement(y.at(sommet).second, y.at(arrive).second, ponderation);
-                if (y.at(arrive).second != valPrecedente)
-                {
-                    y.at(arrive).first = sommet;
-                }
-                stable = y.at(arrive).second < (y.at(sommet).second + ponderation);
+                stable = iterationTrouverPlusCoursChemin(sommet, arrive, y, attribut);
             }
         }
 
@@ -164,27 +157,18 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
  */
 Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> y, size_t indexOrigin, size_t indexDestination, bool stable) const
 {
-    Chemin chemin;
-    chemin.listeVilles = {};
-    chemin.listeVilles.reserve(y.size());
-    chemin.dureeTotale = 0;
-    chemin.coutTotal = 0;
-    chemin.nsTotal = 0;
+    Chemin chemin = initialiseChemin(y.size());
     chemin.reussi = stable;
 
     size_t origineCourante = indexDestination;
     int i = 0;
     while (origineCourante != indexOrigin)
     {
-        chemin.listeVilles.push_back(unReseau.getNomSommet(origineCourante));
-
         const size_t destinationCourante = y[origineCourante].first;
         // on inverse,car on marche a reculons
         const Ponderations ponderation = unReseau.getPonderationsArc(destinationCourante, origineCourante);
-        // construction du chemin
-        chemin.dureeTotale += ponderation.duree;
-        chemin.coutTotal += ponderation.coutt;
-        chemin.nsTotal += ponderation.ns;
+        // ajoute la ville et ses ponderation au chemin
+        ajoutUneVilleAunChemin(chemin, ponderation, unReseau.getNomSommet(origineCourante));
         //suivant
         origineCourante = y.at(origineCourante).first;
         i++;
@@ -194,9 +178,58 @@ Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> y, s
         }
     }
     chemin.listeVilles.push_back(unReseau.getNomSommet(indexOrigin));
+    // on a procede a reculon, donc on inverse la le vecteur
     std::reverse(std::begin(chemin.listeVilles), std::end(chemin.listeVilles));
     return chemin;
 }
+/**
+ * \fn void ReseauAerien::ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &ponderation, const std::string &ville) const
+ * \param chemin chemin sujet
+ * \param ponderation a ajouter
+ * \param ville ville a ajouter
+ * met a jour un chemin a partir d'une ville et une ponderation
+ */
+void ReseauAerien::ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &ponderation, const std::string &ville) const
+{
+    chemin.dureeTotale += ponderation.duree;
+    chemin.coutTotal += ponderation.coutt;
+    chemin.nsTotal += ponderation.ns;
+    chemin.listeVilles.push_back(ville);
+}
+/**
+ * \fn Chemin ReseauAerien::initialiseChemin() const
+ * retourn un chemin vide
+ */
+Chemin ReseauAerien::initialiseChemin(int tailleListeVide) const
+{
+    Chemin chemin;
+    chemin.listeVilles = {};
+    chemin.listeVilles.reserve(tailleListeVide);
+    chemin.dureeTotale = 0;
+    chemin.coutTotal = 0;
+    chemin.nsTotal = 0;
+    chemin.reussi = true;
+    return chemin;
+}
+/**
+ * \fn void ReseauAerien::iterationTrouverPlusCoursChemin(size_t source, size_t arrivee, std::vector<std::pair<size_t, float>> &y) const;
+ * \param source index du sommet source
+ * \param arrice index du sommet d'arrivee
+ * \param y ponderation ainsi que successeur
+ * modifie la valeur de y a l'aide d'un relachement pour une itteration retourne si l'iteration est stable(fait du sens seulement pour Bellmanford)
+ */
+bool ReseauAerien::iterationTrouverPlusCoursChemin(size_t source, size_t arrive, std::vector<std::pair<size_t, float>> &y, AttributPonderations attribut) const
+{
+    const float ponderation = unReseau.getPonderationsArc(source, arrive).getAttribute(attribut);
+    const float valPrecedente = y.at(arrive).second;
+    y.at(arrive).second = relachement(y.at(source).second, y.at(arrive).second, ponderation);
+    if (y.at(arrive).second != valPrecedente)
+    {
+        y.at(arrive).first = source;
+    }
+    return y.at(arrive).second < (y.at(source).second + ponderation);
+}
+
 // Méthode fournie
 /**
  * \fn void ReseauAerien::chargerReseau(std::ifstream & fichierEntree)
