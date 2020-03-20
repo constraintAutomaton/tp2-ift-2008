@@ -169,6 +169,7 @@ std::vector<size_t> Graphe::listerSommetsAdjacents(size_t sommet) const
 		throw std::logic_error("index du sommet invalide");
 	}
 }
+
 /**
  * \fn std::string Graphe::getNomSommet(size_t sommet) const
  * \param sommet index du sommet sujet

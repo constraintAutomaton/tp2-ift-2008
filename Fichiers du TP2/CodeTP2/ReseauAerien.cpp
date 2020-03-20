@@ -13,6 +13,7 @@
 #include <sstream>
 #include <fstream>
 #include <climits>
+#include <algorithm>
 //vous pouvez inclure d'autres librairies si c'est nécessaire
 
 namespace TP2
@@ -77,6 +78,8 @@ Chemin ReseauAerien::rechercheCheminBellManFord(const std::string &origine, cons
 }
 Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const std::string &destination, bool dureeCout) const
 {
+    Chemin chemin = initialiseChemin(unReseau.getNombreSommets());
+    
     AttributPonderations attribut;
     if (dureeCout)
     {
@@ -86,34 +89,46 @@ Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const s
     {
         attribut = coutt;
     }
+    
+    bool connue = true;
     int index_max = unReseau.getNombreSommets();
     const size_t index_source = unReseau.getNumeroSommet(origine);
-    std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
-    y.at(index_source).second = 0;
-    int k = 1;
-    bool connue = true;
-    const int n_arc = unReseau.getNombreArcs();
-    do
+    if(unReseau.listerSommetsAdjacents(index_source).empty() == true)
     {
-        connue = true;
-        for (int sommet = 0; sommet < index_max; sommet++)
-        {
-            for (auto arrive : unReseau.listerSommetsAdjacents(sommet))
-            {
-                const float ponderation = unReseau.getPonderationsArc(sommet, arrive).getAttribute(attribut);
-                const float valPrecedente = y.at(arrive).second;
-                y.at(arrive).second = relachement(y.at(sommet).second, y.at(arrive).second, ponderation);
-                if (y.at(arrive).second != valPrecedente)
-                {
-                    y.at(arrive).first = y.at(sommet).first;
-                }
-                connue = y.at(arrive).second < (y.at(sommet).second + ponderation);
-            }
-        }
-        k++;
-    } while (connue == false && k < n_arc + 1);
-    const size_t indexDestination = unReseau.getNumeroSommet(destination);
-    return makeChemin(y, index_source, indexDestination, connue);
+        return chemin;
+    }
+    std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(),std::numeric_limits<float>::infinity()));
+    std::vector<bool> som_connue(unReseau.getNombreSommets(),false);
+    y.at(index_source).second = 0;
+    som_connue.at(index_source)=connue;
+    
+    const size_t index_destination = unReseau.getNumeroSommet(destination);
+    size_t index_courant=index_source;
+    std::vector<size_t> v_adj;
+    v_adj.reserve(index_max);
+    v_adj = unReseau.listerSommetsAdjacents(index_courant);
+    std::vector<size_t>::iterator arc_min;
+    
+    do
+    { 
+    for( auto it=v_adj.begin(); it != v_adj.end(); ++it)
+    {
+       
+        float pond=unReseau.getPonderationsArc(index_courant,*it).getAttribute(attribut);
+        y.at(*it).second=relachement(y.at(index_courant).second,y.at(*it).second,pond);
+        
+    }
+    arc_min=std::min_element(v_adj.begin(), v_adj.end());
+    std::vector<size_t>::iterator it = std::find(v_adj.begin(), v_adj.end(), *arc_min);
+    int index = std::distance(v_adj.begin(), it);
+    index_courant=v_adj.at(index);
+    v_adj.clear();
+    som_connue.at(index_courant)=connue;
+    v_adj = unReseau.listerSommetsAdjacents(index_courant);
+    } while (som_connue.at(index_destination) = false );
+    
+    const size_t index_dest = unReseau.getNumeroSommet(destination);
+    return makeChemin(y, index_source, index_dest, connue);
 }
 /**
  * \fn Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
