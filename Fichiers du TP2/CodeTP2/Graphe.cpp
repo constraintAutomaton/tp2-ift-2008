@@ -258,7 +258,7 @@ Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
  */
 bool Graphe::isEqual(Ponderations poid1, Ponderations poid2) const
 {
-	return poid1.coutt == poid2.coutt && poid1.duree == poid2.duree && poid1.ns == poid2.ns;
+	return poid1.attributCout == poid2.attributCout && poid1.duree == poid2.duree && poid1.ns == poid2.ns;
 }
 
 } // namespace TP2

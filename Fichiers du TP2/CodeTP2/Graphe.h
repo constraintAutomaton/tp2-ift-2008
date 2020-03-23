@@ -28,7 +28,7 @@ namespace TP2
 enum AttributPonderations
 {
 	duree,
-	coutt,
+	attributCout,
 	ns
 };
 /**
@@ -39,9 +39,9 @@ struct Ponderations
 {
 
 	float duree; // La durée du vol en heures (ex. 0.8 heures entre Québec et Montréal)
-	float coutt;  // Le coutt du trajet en dollars (ex. 220.46 $ pour un vol entre Québec et Montréal)
+	float attributCout;  // Le attributCout du trajet en dollars (ex. 220.46 $ pour un vol entre Québec et Montréal)
 	int ns;		 // Un niveau de sécurité représentant un indice qui peut être négatif
-	Ponderations(float d, float c, int n) : duree(d), coutt(c), ns(n) {}
+	Ponderations(float d, float c, int n) : duree(d), attributCout(c), ns(n) {}
 
 	float getAttribute(AttributPonderations attribute) const
 	{
@@ -51,9 +51,9 @@ struct Ponderations
 		{
 			return duree;
 		}
-		case AttributPonderations::coutt:
+		case AttributPonderations::attributCout:
 		{
-			return coutt;
+			return attributCout;
 		}
 		case AttributPonderations::ns:
 		{

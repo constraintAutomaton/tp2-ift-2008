@@ -69,115 +69,113 @@ Chemin ReseauAerien::rechercheCheminBellManFord(const std::string &origine, cons
     case 1:
         return bellManFord(origine, destination, AttributPonderations::duree);
     case 2:
-        return bellManFord(origine, destination, AttributPonderations::coutt);
+        return bellManFord(origine, destination, AttributPonderations::attributCout);
     case 3:
         return bellManFord(origine, destination, AttributPonderations::ns);
     default:
         throw std::logic_error("type de trajet mal definie");
     }
 }
+/**
+ * \fn Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const std::string &destination, bool dureeCout) const
+ * \param origine nom du noeud d'origine
+ * \param destination nom du noeud de destination
+ * \param dureeCout indique la metric du plus court chemin
+ * retourne le plus cours chemin avec l'algorithme de dijkstra, si dureeCout est vrai la ponderation
+ * est sur la duree sinon sur le cout
+ */
 Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const std::string &destination, bool dureeCout) const
 {
-    Chemin chemin = initialiseChemin(unReseau.getNombreSommets());
-
-    AttributPonderations attribut;
     if (dureeCout)
     {
-        attribut = duree;
+        return dijkstra(origine, destination, AttributPonderations::duree);
     }
     else
     {
-        attribut = coutt;
+        return dijkstra(origine, destination, AttributPonderations::attributCout);
     }
-
-    bool connue = true;
-    int index_max = unReseau.getNombreSommets();
-    const size_t index_source = unReseau.getNumeroSommet(origine);
-    const size_t index_destination = unReseau.getNumeroSommet(destination);
-    if (unReseau.listerSommetsAdjacents(index_source).size() == 0)
-    {
-        return chemin;
-    }
-    
-    std::vector<std::string> nom_sommets=unReseau.getSommetsGraphe();
-    
-    std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
-
-    std::vector<float> z (unReseau.getNombreSommets(),std::numeric_limits<float>::infinity());
-
-    std::vector<bool> som_connue(unReseau.getNombreSommets(), false);
-    std::vector<size_t> sommet_connue(unReseau.getNombreSommets());
-    for(size_t i=0;i<unReseau.getNombreSommets();i++)
-    {
-    sommet_connue[i]=i;
-    }
-    y.at(index_source).second = 0;
-    z.at(index_source)=0;
-    
-    //som_connue.at(index_source) = connue;
-    //index du sommet courant (ayany plus petite ponderation arc)
-    size_t index_courant = index_source;
-    std::vector<size_t> v_adj;
-    v_adj.reserve(index_max);
-    v_adj = unReseau.listerSommetsAdjacents(index_courant);
-    std::vector<size_t>::iterator arc_min;
-    float arc_minimum=std::numeric_limits<float>::infinity();
-    bool pond_inf=true;
-  do
-    {
-        //boucler sur les sommets adjacents à l'index courant correspondant au plus petit arc et les relacher
-        for (auto it = v_adj.begin(); it != v_adj.end(); ++it)
-        {
-         
-             if( som_connue.at(*it) && som_connue.at(index_courant))
-            {
-                v_adj.erase(it);
-                
-                continue;
-            }
-         
-            
-            float pond = unReseau.getPonderationsArc(index_courant, *it).getAttribute(attribut);
-            y.at(*it).second = relachement(y.at(index_courant).second, y.at(*it).second, pond);
-            y.at(*it).first = index_courant;
-
-            //trouver l'arc minimum parmi les arcs des sommets adjacents
-            if(arc_minimum>y.at(*it).second)
-            {
-                arc_min =it;
-                arc_minimum=y.at(*it).second;
-            }
-
-        }
-        if(std::find(v_adj.begin(),v_adj.end(),index_destination) != v_adj.end())
-        {
-            
-            break;
-        }
-       
-        //arc_min = std::min_element(v_adj.begin(), v_adj.end());
-
-        //trouver l'index du sommet ayant la petite ponderation
-        std::vector<size_t>::iterator it = std::find(v_adj.begin(), v_adj.end(), *arc_min);
-        int index = std::distance(v_adj.begin(), it);
-
-        //mettre l'index courant sur le sommet ayant la plus petite ponderation
-        index_courant = v_adj.at(index);
-        som_connue.at(index_courant) = connue;
-         if(som_connue.at(index_destination))
-        {
-            break;
-        }
-        v_adj.clear();
-        //Charger les sommets adjacents du sommet courant
-        v_adj = unReseau.listerSommetsAdjacents(index_courant);
-        
-    } while (v_adj.size()!=0 && !som_connue.at(index_destination));
-   
-
-    
-    return makeChemin(y, index_source, index_destination, connue);
 }
+/**
+ * \fn std::vector<size_t> ReseauAerien::intialiseTDijkstra(size_t taille) const
+ * \param taille taille de t
+ * initialise le vecteur t de dijsktra
+ */
+std::vector<size_t> ReseauAerien::intialiseTDijkstra(size_t taille) const
+{
+    std::vector<size_t> t;
+    t.reserve(taille);
+    for (int i = 0; i < taille; i++)
+    {
+        t.push_back(i);
+    }
+    return t;
+}
+/**
+ * \fn void miseAjourTDijkstra(std::vector<size_t> &t, const std::vector<std::pair<size_t, float>> &y) const
+ * \param t vecteur t de dijsktra afin de sommet non analyser
+ * \param y valeur des noeud a la suite d'un algorithme plus cours chemin
+ * retourn le prochain chemin a analyser et enleve ce chemin du vecteur
+ */
+size_t ReseauAerien::miseAjourTDijkstra(std::vector<size_t> &t, const std::vector<std::pair<size_t, float>> &y) const
+{
+    if (t.size() == 1)
+    {
+        const size_t returnedValue = t.at(0);
+        t.erase(t.end() - 1);
+        return returnedValue;
+    }
+    std::pair<size_t, float> min = std::make_pair(std::numeric_limits<size_t>::infinity(),
+                                                  std::numeric_limits<float>::infinity());
+    for (size_t i = 0; i < y.size(); i++)
+    {
+        // on regarde si le sommet n'a pas ete analyser
+        if (std::find(t.begin(), t.end(), i) != t.end())
+        {
+            if (y.at(i).second < min.second)
+            {
+                min.second = y.at(i).second;
+                min.first = i;
+            }
+        }
+    }
+    if (min.first == std::numeric_limits<float>::infinity())
+    {
+        const size_t returnedValue = t.at(0);
+        t.erase(t.begin());
+        return returnedValue;
+    }
+    t.erase(std::find(t.begin(), t.end(), min.first));
+    return min.first;
+}
+/**
+ * \fn Chemin ReseauAerien::dijkstra(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
+ * \param origine nom du noeud d'origine
+ * \param destination nom du noeud de destination
+ * \param attribut
+ * execute dijkstra selon l'attribut specifie
+ */
+Chemin ReseauAerien::dijkstra(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
+{
+
+    const size_t index_source = unReseau.getNumeroSommet(origine);
+    // ponderation des sommet
+    std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
+    // met la valeur de la source a 0
+    y.at(index_source).second = 0;
+    // nombre d'iteration
+    std::vector<size_t> t = intialiseTDijkstra(y.size());
+    do
+    {
+        const size_t sommet = miseAjourTDijkstra(t, y);
+        for (auto arrive : unReseau.listerSommetsAdjacents(sommet))
+        {
+            iterationTrouverPlusCoursChemin(sommet, arrive, y, attribut);
+        }
+    } while ((!t.empty()));
+    const size_t index_destination = unReseau.getNumeroSommet(destination);
+    return makeChemin(y, index_source, index_destination);
+}
+
 /**
  * \fn Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
  * \param origine nom du noeud d'origine
@@ -256,7 +254,7 @@ Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> &y, 
 void ReseauAerien::ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &ponderation, const std::string &ville) const
 {
     chemin.dureeTotale += ponderation.duree;
-    chemin.coutTotal += ponderation.coutt;
+    chemin.coutTotal += ponderation.attributCout;
     chemin.nsTotal += ponderation.ns;
     chemin.listeVilles.push_back(ville);
 }

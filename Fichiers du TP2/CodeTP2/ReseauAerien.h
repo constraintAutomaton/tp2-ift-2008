@@ -79,17 +79,20 @@ public:
 	Chemin rechercheCheminBellManFord(const std::string &origine, const std::string &destination, int dureeCoutNiveau) const;
 
 	//Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité
-	
+
 private:
 	Graphe unReseau;
-		   // Le type ReseauAerien est composé d'un graphe
+	// Le type ReseauAerien est composé d'un graphe
 	std::string nomReseau; // Le nom du reseau (exemple: Air Canada)
 	float relachement(float ponderationSource, float ponderationTrajet, float ponderationDestination) const;
 	Chemin bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const;
+	Chemin dijkstra(const std::string &origine, const std::string &destination, AttributPonderations attribut) const;
 	Chemin initialiseChemin(int tailleListeVide) const;
 	Chemin makeChemin(const std::vector<std::pair<size_t, float>> &y, size_t indexOrigin, size_t indexDestination, bool stable = true) const;
 	bool iterationTrouverPlusCoursChemin(size_t source, size_t arrive, std::vector<std::pair<size_t, float>> &y, AttributPonderations attribut) const;
-	void ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &ponderation,const std::string &ville) const;
+	void ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &ponderation, const std::string &ville) const;
+	std::vector<size_t> intialiseTDijkstra(size_t taille) const;
+	size_t miseAjourTDijkstra(std::vector<size_t> &t, const std::vector<std::pair<size_t, float>> &y) const;
 	// Vous pouvez définir des constantes ici.
 
 	//Vous pouvez ajoutez des méthodes privées si vous sentez leur nécessité
