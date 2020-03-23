@@ -29,7 +29,6 @@ Graphe::Graphe(size_t p_nbSommets) : nbSommets(p_nbSommets), nbArcs(0)
  * \fn void Graphe::noeudExiste(size_t sommet) const
  * \brief Verifie si le sommet appartient au graphe
  * \param[in] sommet index du noeud (sommet) sujet
- 
 */
 bool Graphe::noeudExiste(size_t sommet) const
 {
@@ -83,7 +82,6 @@ void Graphe::nommer(size_t sommet, const std::string &nom)
  * \param[in] duree duree du vol
  * \param[in] cout cout du trajet en dollars
  * \param[in] ns de securite du vol
- * 
  */
 void Graphe::ajouterArc(size_t source, size_t destination, float duree, float cout, int ns)
 {
@@ -108,7 +106,6 @@ void Graphe::ajouterArc(size_t source, size_t destination, float duree, float co
  * \brief  retire un arc entre deux noeud
  * \param[in] source index du noeud sujet
  * \param[in] destination index du noeud destination
- *
  */
 void Graphe::enleverArc(size_t source, size_t destination)
 {
