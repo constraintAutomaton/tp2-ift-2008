@@ -231,6 +231,12 @@ Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> &y, 
     chemin.reussi = stable;
 
     size_t origineCourante = indexDestination;
+    if (y.at(indexDestination).second==std::numeric_limits<float>::infinity())
+    {
+        chemin.reussi = false;
+        return chemin;
+    }
+
     int i = 0;
     while (origineCourante != indexOrigin)
     {
@@ -244,7 +250,8 @@ Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> &y, 
         i++;
         if (i > y.size())
         {
-            throw std::logic_error("Il y a eu un probleme inconnue");
+            chemin.reussi = false;
+            return chemin;
         }
     }
     chemin.listeVilles.push_back(unReseau.getNomSommet(indexOrigin));
@@ -268,7 +275,7 @@ void ReseauAerien::ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &po
 }
 /**
  * \fn Chemin ReseauAerien::initialiseChemin() const
- * retourn un chemin vide
+ * retourne un chemin vide
  */
 Chemin ReseauAerien::initialiseChemin(int tailleListeVide) const
 {
