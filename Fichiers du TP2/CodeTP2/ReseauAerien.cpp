@@ -114,7 +114,7 @@ std::vector<size_t> ReseauAerien::intialiseTDijkstra(size_t taille) const
 }
 /**
  * \fn void miseAjourTDijkstra(std::vector<size_t> &t, const std::vector<std::pair<size_t, float>> &y) const
- * \brief retourn l'index à partir duquel nous allons analyser le prochain chemin.
+ * \brief retourn l'index à partir duquel nous allons analyser le prochain chemin et enleve cet index de t.
  * \param[in] t vecteur t de dijsktra contenant les sommets non analysés du réseau
  * \param[in] y vecteur contenant les valeur des noeuds à la suite de l'application de l'algorithme plus cours chemin sur le noeud en question
  */
@@ -260,7 +260,7 @@ Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> &y, 
         }
     }
     chemin.listeVilles.push_back(unReseau.getNomSommet(indexOrigin));
-    // on a procede a reculon, donc on inverse la le vecteur
+    // on a procede a reculon, donc on inverse le vecteur
     std::reverse(std::begin(chemin.listeVilles), std::end(chemin.listeVilles));
     return chemin;
 }
