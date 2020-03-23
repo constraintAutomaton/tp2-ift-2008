@@ -17,6 +17,7 @@
 #include <vector>
 #include <map>
 #include <utility>
+#include <queue>
 
 #ifndef _RESEAUAERIEN__H
 #define _RESEAUAERIEN__H
@@ -78,9 +79,10 @@ public:
 	Chemin rechercheCheminBellManFord(const std::string &origine, const std::string &destination, int dureeCoutNiveau) const;
 
 	//Vous pouvez ajoutez d'autres méthodes publiques si vous sentez leur nécessité
-
+	
 private:
-	Graphe unReseau;	   // Le type ReseauAerien est composé d'un graphe
+	Graphe unReseau;
+		   // Le type ReseauAerien est composé d'un graphe
 	std::string nomReseau; // Le nom du reseau (exemple: Air Canada)
 	float relachement(float ponderationSource, float ponderationTrajet, float ponderationDestination) const;
 	Chemin bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const;

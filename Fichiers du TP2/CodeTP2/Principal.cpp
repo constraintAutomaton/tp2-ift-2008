@@ -170,6 +170,7 @@ int main()
 					cout << "Temps d'execution: " << endTime - startTime << " microsecondes" << endl;
 					break;
 				}
+				
 			}
 		}
 		catch(exception & e)

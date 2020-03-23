@@ -120,6 +120,8 @@ public:
 	// Exception logic_error si source ou destination supérieur à nbSommets
 	Ponderations getPonderationsArc(size_t source, size_t destination) const;
 
+	//retourne le vecteur de sommet du graphe
+	std::vector<std::string> getSommetsGraphe() const;
 	//Surcharge de l'opérateur de sortie.
 	//Ne touchez pas à cette fonction !
 	friend std::ostream &operator<<(std::ostream &out, const Graphe &g)

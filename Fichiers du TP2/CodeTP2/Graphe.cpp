@@ -217,6 +217,13 @@ int Graphe::getNombreArcs() const
 }
 
 /**
+ *
+ */
+std::vector<std::string> Graphe::getSommetsGraphe() const
+{
+	return sommets;
+}
+/**
  * \fn Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
  * \param source sommet sujet
  * \param destination sommet destionation

@@ -93,41 +93,90 @@ Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const s
     bool connue = true;
     int index_max = unReseau.getNombreSommets();
     const size_t index_source = unReseau.getNumeroSommet(origine);
-    if (unReseau.listerSommetsAdjacents(index_source).empty() == true)
+    const size_t index_destination = unReseau.getNumeroSommet(destination);
+    if (unReseau.listerSommetsAdjacents(index_source).size() == 0)
     {
         return chemin;
     }
+    
+    std::vector<std::string> nom_sommets=unReseau.getSommetsGraphe();
+    
     std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
-    std::vector<bool> som_connue(unReseau.getNombreSommets(), false);
-    y.at(index_source).second = 0;
-    som_connue.at(index_source) = connue;
 
-    const size_t index_destination = unReseau.getNumeroSommet(destination);
+    std::vector<float> z (unReseau.getNombreSommets(),std::numeric_limits<float>::infinity());
+
+    std::vector<bool> som_connue(unReseau.getNombreSommets(), false);
+    std::vector<size_t> sommet_connue(unReseau.getNombreSommets());
+    for(size_t i=0;i<unReseau.getNombreSommets();i++)
+    {
+    sommet_connue[i]=i;
+    }
+    y.at(index_source).second = 0;
+    z.at(index_source)=0;
+    
+    //som_connue.at(index_source) = connue;
+    //index du sommet courant (ayany plus petite ponderation arc)
     size_t index_courant = index_source;
     std::vector<size_t> v_adj;
     v_adj.reserve(index_max);
     v_adj = unReseau.listerSommetsAdjacents(index_courant);
     std::vector<size_t>::iterator arc_min;
-
-    do
+    float arc_minimum=std::numeric_limits<float>::infinity();
+    bool pond_inf=true;
+  do
     {
+        //boucler sur les sommets adjacents à l'index courant correspondant au plus petit arc et les relacher
         for (auto it = v_adj.begin(); it != v_adj.end(); ++it)
         {
-
+         
+             if( som_connue.at(*it) && som_connue.at(index_courant))
+            {
+                v_adj.erase(it);
+                
+                continue;
+            }
+         
+            
             float pond = unReseau.getPonderationsArc(index_courant, *it).getAttribute(attribut);
             y.at(*it).second = relachement(y.at(index_courant).second, y.at(*it).second, pond);
+            y.at(*it).first = index_courant;
+
+            //trouver l'arc minimum parmi les arcs des sommets adjacents
+            if(arc_minimum>y.at(*it).second)
+            {
+                arc_min =it;
+                arc_minimum=y.at(*it).second;
+            }
+
         }
-        arc_min = std::min_element(v_adj.begin(), v_adj.end());
+        if(std::find(v_adj.begin(),v_adj.end(),index_destination) != v_adj.end())
+        {
+            
+            break;
+        }
+       
+        //arc_min = std::min_element(v_adj.begin(), v_adj.end());
+
+        //trouver l'index du sommet ayant la petite ponderation
         std::vector<size_t>::iterator it = std::find(v_adj.begin(), v_adj.end(), *arc_min);
         int index = std::distance(v_adj.begin(), it);
-        index_courant = v_adj.at(index);
-        v_adj.clear();
-        som_connue.at(index_courant) = connue;
-        v_adj = unReseau.listerSommetsAdjacents(index_courant);
-    } while (som_connue.at(index_destination) = false);
 
-    const size_t index_dest = unReseau.getNumeroSommet(destination);
-    return makeChemin(y, index_source, index_dest, connue);
+        //mettre l'index courant sur le sommet ayant la plus petite ponderation
+        index_courant = v_adj.at(index);
+        som_connue.at(index_courant) = connue;
+         if(som_connue.at(index_destination))
+        {
+            break;
+        }
+        v_adj.clear();
+        //Charger les sommets adjacents du sommet courant
+        v_adj = unReseau.listerSommetsAdjacents(index_courant);
+        
+    } while (v_adj.size()!=0 && !som_connue.at(index_destination));
+   
+
+    
+    return makeChemin(y, index_source, index_destination, connue);
 }
 /**
  * \fn Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
