@@ -18,7 +18,8 @@ namespace TP2
 
 /**
  * \fn Graphe::Graphe(size_t p_nbSommets):nbSommets(p_nbSommets)
- * \param p_nbSommets nombre de sommet du graph
+ * \brief Constructeur de la classe graphe
+ * \param[in] p_nbSommets nombre de sommets du graphe
  */
 Graphe::Graphe(size_t p_nbSommets) : nbSommets(p_nbSommets), nbArcs(0)
 {
@@ -26,8 +27,9 @@ Graphe::Graphe(size_t p_nbSommets) : nbSommets(p_nbSommets), nbArcs(0)
 }
 /**
  * \fn void Graphe::noeudExiste(size_t sommet) const
- * \param sommet index du noeud sujet
- * verifie si le sommet existe
+ * \brief Verifie si le sommet appartient au graphe
+ * \param[in] sommet index du noeud (sommet) sujet
+ 
 */
 bool Graphe::noeudExiste(size_t sommet) const
 {
@@ -39,16 +41,15 @@ bool Graphe::noeudExiste(size_t sommet) const
 }
 /**
  * \fn Graphe::~Graphe()
- * destructeur du graph
+ * \brief destructeur de la classe graphe
  */
 Graphe::~Graphe()
 {
 }
 /**
  * \fn void Graphe::resize(size_t nouvelleTaille)
- * \param nouvelleTaille nouvelle taille du graph
- * change la taille du graph, il est supposer que le graph est vide, aucune validation est faite
- * afin de s'assurer de cela
+ * \brief Change la taille du graphe, il est supposé que le graphe soit vide, mais aucune vérification n'est faite pour s'en assurer
+ * \param[in] nouvelleTaille nouvelle taille du graphe
  */
 void Graphe::resize(size_t nouvelleTaille)
 {	
@@ -59,9 +60,9 @@ void Graphe::resize(size_t nouvelleTaille)
 }
 /**
  * \fn void Graphe::nommer(size_t sommet, const std::string &nom)
- * \param nom nom du sommet
- * donne un nom a un sommet d'apres sont index dans le vecteur des sommet.
- * renome le sommet si celui-ci est deja nommee
+ * \brief donne un nom à un sommet d'après sont index dans le vecteur des sommet. Renomme le sommet si celui-ci est deja nommé.
+ * \param[in] sommet index du sommet dans le graphe
+ * \param[in] nom nom du sommet
  */
 void Graphe::nommer(size_t sommet, const std::string &nom)
 {
@@ -76,12 +77,13 @@ void Graphe::nommer(size_t sommet, const std::string &nom)
 }
 /**
  * \fn void Graphe::ajouterArc(size_t source, size_t destination, float duree, float cout, int ns)
- * \param source index du noeud sujet
- * \param destination index du noeud destination
- * \param duree duree du vol
- * \param cout cout du trajet en dollars
- * \param niveau de securite du vol
- * ajoute un arc entre deux noeud en y attributant une ponderation
+ * \brief ajoute un arc entre deux noeud en y attributant une ponderation
+ * \param[in] source index du sommet sujet
+ * \param[in] destination index du noeud destination
+ * \param[in] duree duree du vol
+ * \param[in] cout cout du trajet en dollars
+ * \param[in] ns de securite du vol
+ * 
  */
 void Graphe::ajouterArc(size_t source, size_t destination, float duree, float cout, int ns)
 {
@@ -103,9 +105,10 @@ void Graphe::ajouterArc(size_t source, size_t destination, float duree, float co
 }
 /**
  * \fn void Graphe::enleverArc(size_t source, size_t destination)
- * \param source index du noeud sujet
- * \param destination index du noeud destination
- * retire l'arc entre deux noeud
+ * \brief  retire un arc entre deux noeud
+ * \param[in] source index du noeud sujet
+ * \param[in] destination index du noeud destination
+ *
  */
 void Graphe::enleverArc(size_t source, size_t destination)
 {
@@ -128,8 +131,10 @@ void Graphe::enleverArc(size_t source, size_t destination)
 }
 /**
  * \fn bool Graphe::arcExiste(size_t source, size_t destination) const
- * \param source index du noeud sujet
- * \param destionation index de la destination
+ * \brief Indique si un arc existe entre deux noeuds
+ * \param[in] source index du noeud sujet
+ * \param[in] destionation index de la destination
+ * \return un booléen qui indique si l'arc existe ou non
  */
 bool Graphe::arcExiste(size_t source, size_t destination) const
 {
@@ -149,8 +154,9 @@ bool Graphe::arcExiste(size_t source, size_t destination) const
 }
 /**
  * \fn std::vector<size_t> Graphe::listerSommetsAdjacents(size_t sommet) const
- * \param sommet sommet sujet
- * retourne les indexs des sommet adjacent
+ * \brief retourne les indexs des sommets adjacent au sommet sujet
+ * \param[in] sommet sommet sujet 
+ * \return les sommets adjacents dans un vecteur <size_t>
  */
 std::vector<size_t> Graphe::listerSommetsAdjacents(size_t sommet) const
 {
@@ -172,8 +178,9 @@ std::vector<size_t> Graphe::listerSommetsAdjacents(size_t sommet) const
 
 /**
  * \fn std::string Graphe::getNomSommet(size_t sommet) const
- * \param sommet index du sommet sujet
- * retourne le nom du sommet
+ * \brief retourne le nom du sommet sujet
+ * \param[in] sommet index du sommet sujet
+ * \return le nom du sommet correspondant dans un "string"
  */
 std::string Graphe::getNomSommet(size_t sommet) const
 {
@@ -186,7 +193,9 @@ std::string Graphe::getNomSommet(size_t sommet) const
 
 /**
  * \fn size_t Graphe::getNumeroSommet(const std::string &nom) const
- * \param nom nom du noeud recherche, retourne le premier noeud ayant ce nom
+ * \brief retourne l'index du premier noeud ayant ce nom dans le graphe (supposé que deux sommets ont des noms différents)
+ * \param[in] nom nom du noeud recherche
+ * \return l'index du noeud correspondant au nom fournit en paramètre 
  */
 size_t Graphe::getNumeroSommet(const std::string &nom) const
 {
@@ -201,7 +210,8 @@ size_t Graphe::getNumeroSommet(const std::string &nom) const
 }
 /**
  * \fn int Graphe::getNombreSommets() const
- * retourne le nombre de sommet
+ * \brief retourne le nombre de sommets du graphe
+ * \return nbSommets l'attribut indiquant le nombre de sommets du graphe
  */
 int Graphe::getNombreSommets() const
 {
@@ -209,7 +219,8 @@ int Graphe::getNombreSommets() const
 }
 /**
  * \fn int Graphe::getNombreArcs() const
- * retourne le nombre d'arcs
+ * \brief retourne le nombre d'arcs du graphe
+ * \return nbArcs l'attribut indiquant le nombre d'arc du graphe
  */
 int Graphe::getNombreArcs() const
 {
@@ -217,7 +228,9 @@ int Graphe::getNombreArcs() const
 }
 
 /**
- *
+ * \fn std::vector<std::string> Graphe::getSommetsGraphe() const
+ * \brief retourne le vecteur de sommets du graphe
+ * \return sommets l'attribut contenant les sommets du graphe
  */
 std::vector<std::string> Graphe::getSommetsGraphe() const
 {
@@ -225,9 +238,10 @@ std::vector<std::string> Graphe::getSommetsGraphe() const
 }
 /**
  * \fn Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
- * \param source sommet sujet
- * \param destination sommet destionation
- * retourne la ponderation d'un noeud adjacent
+ * \brief retourne la ponderation d'un noeud adjacent
+ * \param[in] source sommet sujet
+ * \param[in] destination sommet destination
+ * \return pondération de l'arc correspondant
  */
 Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
 {
@@ -252,9 +266,10 @@ Ponderations Graphe::getPonderationsArc(size_t source, size_t destination) const
 }
 /**
  * \fn 	bool isEqual( Ponderations poid1, Ponderations poid2)
- * \param poid1 premiere ponderation
- * \param poid2 deuxieme ponderation
- * verifie si 2 ponderation sont egal
+ * \brief verifie si deux ponderation sont égales ou non
+ * \param[in] poid1 premiere ponderation
+ * \param[in] poid2 deuxieme ponderation
+ * \return un booléen qui indique si les deux pondérations fournit en paramètres sont égales ou non
  */
 bool Graphe::isEqual(Ponderations poid1, Ponderations poid2) const
 {

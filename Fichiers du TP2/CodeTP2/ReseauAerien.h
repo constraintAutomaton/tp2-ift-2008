@@ -24,7 +24,10 @@
 
 namespace TP2
 {
-
+/**
+ * \struct Chemin
+ * \brief Une struture utilisée pour définir le trajet d'un vol
+ */
 struct Chemin
 {
 	//listeVilles doit contenir la liste des villes formant le chemin
@@ -37,7 +40,10 @@ struct Chemin
 	int nsTotal;	   // Niveau de sécurité total du chemin
 	bool reussi;	   // Un booléen qui vaut true si chemin a été trouvé, false sinon
 };
-
+/**
+ * \class ReseauAerien
+ * \brief Classe représentant un reseau aérien
+ */
 class ReseauAerien
 {
 

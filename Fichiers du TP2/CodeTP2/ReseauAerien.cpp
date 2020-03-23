@@ -20,24 +20,25 @@ namespace TP2
 {
 /**
  * \fn ReseauAerien::ReseauAerien(std::string nomReseau, size_t nbVilles)
- * \param nomReseau nom du reseau
- * \param nbVilles nombre de ville
- * constructeur du reseau aerien
+ * \brief constructeur du reseau aerien
+ * \param[in] nomReseau nom du reseau
+ * \param[in] nbVilles nombre de ville
  */
 ReseauAerien::ReseauAerien(std::string nomReseau, size_t nbVilles) : unReseau(Graphe(nbVilles)), nomReseau(nomReseau)
 {
 }
 /**
  * \fn ReseauAerien::~ReseauAerien()
- * destructeur de la classe
+ * \brief destructeur de la classe ReseauAerien
  */
 ReseauAerien::~ReseauAerien()
 {
 }
 /**
  * \fn void ReseauAerien::resize(size_t nouvelleTaille)
- * \param nouvelleTaille
- * change la taille du reseau. il est suppose que celui-ci est vide
+ * \brief change la taille du reseau. Il est supposé que celui-ci est vide
+ * \param[in] nouvelleTaille nouvelle taille du réseau aérien
+ * 
  */
 void ReseauAerien::resize(size_t nouvelleTaille)
 {
@@ -45,10 +46,10 @@ void ReseauAerien::resize(size_t nouvelleTaille)
 }
 /**
  * \fn  float ReseauAerien::relachement(float ponderationSource,float ponderationTrajet,float ponderationDestination) const
- * \param ponderationSource ponderation du noeud source
- * \param ponderationTrajet ponderation du trajet
- * \param ponderationDestination ponderation de la destination
- * execute un relachement sur un arc
+ * \brief execute un relachement sur un arc donné
+ * \param[in] ponderationSource ponderation du noeud source
+ * \param[in] ponderationTrajet ponderation de l'arc du trajet 
+ * \param[in] ponderationDestination ponderation de la destination
  */
 float ReseauAerien::relachement(float ponderationSource, float ponderationTrajet, float ponderationDestination) const
 {
@@ -56,11 +57,12 @@ float ReseauAerien::relachement(float ponderationSource, float ponderationTrajet
 }
 /**
  * \fn Chemin ReseauAerien::rechercheCheminBellManFord(const std::string &origine, const std::string &destination, int dureeCoutNiveau) const
- * \param origine nom du noeud d'origine
- * \param destination nom du noeud de destination
- * \param dureeCoutNiveau parametre du chemin le plus cours
- * retourne le plus cours chemin a l'aide de l'algorithme de BellManFord, selon une critere qui est definie par dureeCoutNiveau
- * si sa valeur est de 1 on utilise la duree du vol, 2 le cout du vol et 3 le niveau de securite
+ * \brief retourne le plus cours chemin a l'aide de l'algorithme de BellManFord, selon un critère définie par dureeCoutNiveau \n
+ *  si sa valeur est de 1 on utilise la duree du vol, 2 le cout du vol et 3 le niveau de sécurité
+ * \param[in] origine nom du noeud d'origine
+ * \param[in] destination nom du noeud de destination
+ * \param[in] dureeCoutNiveau parametre du chemin le plus cours
+ * 
  */
 Chemin ReseauAerien::rechercheCheminBellManFord(const std::string &origine, const std::string &destination, int dureeCoutNiveau) const
 {
@@ -78,11 +80,11 @@ Chemin ReseauAerien::rechercheCheminBellManFord(const std::string &origine, cons
 }
 /**
  * \fn Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const std::string &destination, bool dureeCout) const
- * \param origine nom du noeud d'origine
- * \param destination nom du noeud de destination
- * \param dureeCout indique la metric du plus court chemin
- * retourne le plus cours chemin avec l'algorithme de dijkstra, si dureeCout est vrai la ponderation
- * est sur la duree sinon sur le cout
+ * \brief retourne le plus cours chemin avec l'algorithme de dijkstra, si dureeCout est "vrai" la ponderation
+ * est sur la "duree" sinon sur le "cout"
+ * \param[in] origine nom du noeud d'origine
+ * \param[in] destination nom du noeud de destination
+ * \param[in] dureeCout indique la metric du plus court chemin
  */
 Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const std::string &destination, bool dureeCout) const
 {
@@ -97,8 +99,8 @@ Chemin ReseauAerien::rechercheCheminDijkstra(const std::string &origine, const s
 }
 /**
  * \fn std::vector<size_t> ReseauAerien::intialiseTDijkstra(size_t taille) const
- * \param taille taille de t
- * initialise le vecteur t de dijsktra
+ * \brief initialise un vecteur "t" d'index correspondant aux sommets de réseau aérien pour l'algorithme de dijsktra
+ * \param[in] taille taille t correspondant à la taille du ReseauAerien
  */
 std::vector<size_t> ReseauAerien::intialiseTDijkstra(size_t taille) const
 {
@@ -112,9 +114,9 @@ std::vector<size_t> ReseauAerien::intialiseTDijkstra(size_t taille) const
 }
 /**
  * \fn void miseAjourTDijkstra(std::vector<size_t> &t, const std::vector<std::pair<size_t, float>> &y) const
- * \param t vecteur t de dijsktra afin de sommet non analyser
- * \param y valeur des noeud a la suite d'un algorithme plus cours chemin
- * retourn le prochain chemin a analyser et enleve ce chemin du vecteur
+ * \brief retourn l'index à partir duquel nous allons analyser le prochain chemin.
+ * \param[in] t vecteur t de dijsktra contenant les sommets non analysés du réseau
+ * \param[in] y vecteur contenant les valeur des noeuds à la suite de l'application de l'algorithme plus cours chemin sur le noeud en question
  */
 size_t ReseauAerien::miseAjourTDijkstra(std::vector<size_t> &t, const std::vector<std::pair<size_t, float>> &y) const
 {
@@ -143,7 +145,7 @@ size_t ReseauAerien::miseAjourTDijkstra(std::vector<size_t> &t, const std::vecto
             }
         }
     }
-    // si toutes les ponderations sont egal
+    // si toutes les ponderations sont égles
     if (std::get<1>(min) == std::numeric_limits<float>::infinity())
     {
         const size_t returnedValue = t.at(0);
@@ -155,10 +157,11 @@ size_t ReseauAerien::miseAjourTDijkstra(std::vector<size_t> &t, const std::vecto
 }
 /**
  * \fn Chemin ReseauAerien::dijkstra(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
- * \param origine nom du noeud d'origine
- * \param destination nom du noeud de destination
- * \param attribut
- * execute dijkstra selon l'attribut specifie
+ * \brief exécute l'algorithme de dijkstra selon l'attribut spécifié en paramètre
+ * \param[in] origine nom du noeud d'origine
+ * \param[in] destination nom du noeud de destination
+ * \param[in] attribut
+ * \return le chemin du trajet du vol des villes correspondantes après application de l'algorithme de dijkstra
  */
 Chemin ReseauAerien::dijkstra(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
 {
@@ -185,10 +188,11 @@ Chemin ReseauAerien::dijkstra(const std::string &origine, const std::string &des
 
 /**
  * \fn Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
- * \param origine nom du noeud d'origine
- * \param destination nom du noeud de destination
- * \param attribut
- * execute bellmanFord selon l'attribut specifie
+ * \brief exécute l'algorithme de bellmanFord selon l'attribut spécifié
+ * \param[in] origine nom du noeud d'origine
+ * \param[in] destination nom du noeud de destination
+ * \param[in] attribut
+ * \return le chemin du trajet du vol des villes correspondantes après application de l'algorithme de bellman ford
  */
 Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
 {
@@ -219,11 +223,12 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
 }
 /**
  * \fn Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> y, size_t indexOrigin, size_t indexDestination, bool stable) const
- * \param y valeur des noeud a la suite d'un algorithme plus cours chemin
- * \param indexOrigin index de la source
- * \param indexDestination index de la destination
- * \param stable indique si l'algorithme a ete stable
- * cree un chemin a partir des resultat des diferent relachement
+ * \brief crée un chemin à partir des résultat des différents relachements.Définit la ville  rajouter  partir du vecteur y qui contient les prédécesseurs de chaque noeud.
+ * \param[in] y valeur des noeuds à la suite de l'application de l'algorithme du plus court chemin
+ * \param[in] indexOrigin index de la source
+ * \param[in] indexDestination index de la destination
+ * \param[in] stable indique si l'algorithme a été stable après application de l'algorithme
+ * \return un Chemin correspondant aux différentes villes du trajet
  */
 Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> &y, size_t indexOrigin, size_t indexDestination, bool stable) const
 {
@@ -261,10 +266,10 @@ Chemin ReseauAerien::makeChemin(const std::vector<std::pair<size_t, float>> &y, 
 }
 /**
  * \fn void ReseauAerien::ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &ponderation, const std::string &ville) const
- * \param chemin chemin sujet
- * \param ponderation a ajouter
- * \param ville ville a ajouter
- * met a jour un chemin a partir d'une ville et une ponderation
+ * \brief met à jour un chemin à partir d'une ville (nom de la ville) et d'une ponderation (celle avec laquelle nous exécutons l'algorithme)
+ * \param[in] chemin chemin sujet
+ * \param[in] ponderation à ajouter au chemin
+ * \param[in] ville ville à ajouter chemin
  */
 void ReseauAerien::ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &ponderation, const std::string &ville) const
 {
@@ -275,7 +280,8 @@ void ReseauAerien::ajoutUneVilleAunChemin(Chemin &chemin, const Ponderations &po
 }
 /**
  * \fn Chemin ReseauAerien::initialiseChemin() const
- * retourne un chemin vide
+ * \brief retourne un chemin initialisé
+ * \param[in] tailleListeVide taille du chemin
  */
 Chemin ReseauAerien::initialiseChemin(int tailleListeVide) const
 {
@@ -290,10 +296,11 @@ Chemin ReseauAerien::initialiseChemin(int tailleListeVide) const
 }
 /**
  * \fn void ReseauAerien::iterationTrouverPlusCoursChemin(size_t source, size_t arrivee, std::vector<std::pair<size_t, float>> &y) const;
- * \param source index du sommet source
- * \param arrice index du sommet d'arrivee
- * \param y ponderation ainsi que successeur
- * modifie la valeur de y a l'aide d'un relachement pour une itteration retourne si l'iteration est stable(fait du sens seulement pour Bellmanford)
+ * \brief modifie la valeur du vecteur y à l'aide d'un relachement pour une itération \n 
+ * Retourne true si l'itération est stable (utilisable uniquement pour l'algorithme de Bellmanford)
+ * \param[in] source index du sommet source
+ * \param[in] arrive index du sommet d'arrivee
+ * \param[in] y ponderation ainsi que successeur
  */
 bool ReseauAerien::iterationTrouverPlusCoursChemin(size_t source, size_t arrive, std::vector<std::pair<size_t, float>> &y, AttributPonderations attribut) const
 {
@@ -311,6 +318,7 @@ bool ReseauAerien::iterationTrouverPlusCoursChemin(size_t source, size_t arrive,
 // Méthode fournie
 /**
  * \fn void ReseauAerien::chargerReseau(std::ifstream & fichierEntree)
+ * \brief Charge un réseau à partir des données contenues dans un fichier texte
  * \param[in] le fichier contenant l'information sur le réseau
  */
 void ReseauAerien::chargerReseau(std::ifstream &fichierEntree)
