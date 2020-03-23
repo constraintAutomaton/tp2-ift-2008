@@ -118,34 +118,40 @@ std::vector<size_t> ReseauAerien::intialiseTDijkstra(size_t taille) const
  */
 size_t ReseauAerien::miseAjourTDijkstra(std::vector<size_t> &t, const std::vector<std::pair<size_t, float>> &y) const
 {
+    // afin d'eviter une erreur de segmentation quand on erase le dernier element
     if (t.size() == 1)
     {
         const size_t returnedValue = t.at(0);
         t.erase(t.end() - 1);
         return returnedValue;
     }
-    std::pair<size_t, float> min = std::make_pair(std::numeric_limits<size_t>::infinity(),
-                                                  std::numeric_limits<float>::infinity());
+    std::tuple<size_t, float, std::vector<size_t>::const_iterator> min =
+        std::make_tuple(std::numeric_limits<size_t>::infinity(),
+                        std::numeric_limits<float>::infinity(), t.begin());
+    // on cherche le plus petit y qui n'as pas ete traite
     for (size_t i = 0; i < y.size(); i++)
     {
+        auto elementTrouve = std::find(t.begin(), t.end(), i);
         // on regarde si le sommet n'a pas ete analyser
-        if (std::find(t.begin(), t.end(), i) != t.end())
+        if (elementTrouve != t.end())
         {
-            if (y.at(i).second < min.second)
+            if (y.at(i).second < std::get<1>(min))
             {
-                min.second = y.at(i).second;
-                min.first = i;
+                std::get<1>(min) = y.at(i).second;
+                std::get<0>(min) = i;
+                std::get<2>(min) = elementTrouve;
             }
         }
     }
-    if (min.first == std::numeric_limits<float>::infinity())
+    // si toutes les ponderations sont egal
+    if (std::get<1>(min) == std::numeric_limits<float>::infinity())
     {
         const size_t returnedValue = t.at(0);
         t.erase(t.begin());
         return returnedValue;
     }
-    t.erase(std::find(t.begin(), t.end(), min.first));
-    return min.first;
+    t.erase(std::get<2>(min));
+    return std::get<0>(min);
 }
 /**
  * \fn Chemin ReseauAerien::dijkstra(const std::string &origine, const std::string &destination, AttributPonderations attribut) const
@@ -162,8 +168,9 @@ Chemin ReseauAerien::dijkstra(const std::string &origine, const std::string &des
     std::vector<std::pair<size_t, float>> y(unReseau.getNombreSommets(), std::make_pair(std::numeric_limits<size_t>::infinity(), std::numeric_limits<float>::infinity()));
     // met la valeur de la source a 0
     y.at(index_source).second = 0;
-    // nombre d'iteration
+    // noeud a traite
     std::vector<size_t> t = intialiseTDijkstra(y.size());
+    // on applique le relachement sur tous les arc dans l'ordre du plus petit y dans le vecteur t
     do
     {
         const size_t sommet = miseAjourTDijkstra(t, y);
@@ -194,6 +201,7 @@ Chemin ReseauAerien::bellManFord(const std::string &origine, const std::string &
     int k = 1;
     bool stable = true;
     const int n = unReseau.getNombreSommets();
+    // on applique un relachement sur tous les arcs tant que les iterations sont instable ou qu'on a fais n+1 iteration
     do
     {
         stable = true;
